@@ -246,34 +246,45 @@ public class SachController {
             file = new java.io.File(file.getAbsolutePath() + ".csv");
         }
 
-        try (java.io.PrintWriter pw = new java.io.PrintWriter(file, "UTF-8")) {
-            DefaultTableModel m = view.getModel();
+        try (java.io.OutputStream os = new java.io.FileOutputStream(file);
+            java.io.OutputStreamWriter osw = new java.io.OutputStreamWriter(os, java.nio.charset.StandardCharsets.UTF_8);
+            java.io.BufferedWriter bw = new java.io.BufferedWriter(osw);
+            java.io.PrintWriter pw = new java.io.PrintWriter(bw)) {
 
-            for (int c = 0; c < m.getColumnCount(); c++) {
-                pw.print(m.getColumnName(c));
-                if (c < m.getColumnCount() - 1) pw.print(",");
-            }
-            pw.println();
+           pw.print('\uFEFF');
 
-            for (int r = 0; r < m.getRowCount(); r++) {
-                for (int c = 0; c < m.getColumnCount(); c++) {
-                    Object val = m.getValueAt(r, c);
-                    String s = (val == null) ? "" : String.valueOf(val);
-                    if (s.contains(",") || s.contains("\"")) {
-                        s = s.replace("\"", "\"\"");
-                        s = "\"" + s + "\"";
-                    }
-                    pw.print(s);
-                    if (c < m.getColumnCount() - 1) pw.print(",");
-                }
-                pw.println();
-            }
+           DefaultTableModel m = view.getModel();
 
-            JOptionPane.showMessageDialog(view, "Xuất CSV thành công!");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(view, "Xuất CSV thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
+           // ===== Header =====
+           for (int c = 0; c < m.getColumnCount(); c++) {
+               pw.print(m.getColumnName(c));
+               if (c < m.getColumnCount() - 1) pw.print(",");
+           }
+           pw.println();
+
+           // ===== Data =====
+           for (int r = 0; r < m.getRowCount(); r++) {
+               for (int c = 0; c < m.getColumnCount(); c++) {
+                   Object val = m.getValueAt(r, c);
+                   String s = (val == null) ? "" : String.valueOf(val);
+
+                   if (s.contains(",") || s.contains("\"")) {
+                       s = s.replace("\"", "\"\"");
+                       s = "\"" + s + "\"";
+                   }
+
+                   pw.print(s);
+                   if (c < m.getColumnCount() - 1) pw.print(",");
+               }
+               pw.println();
+           }
+
+           JOptionPane.showMessageDialog(view, "Xuất CSV thành công!");
+       } catch (Exception ex) {
+           ex.printStackTrace();
+           JOptionPane.showMessageDialog(view, "Xuất CSV thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+       }
+
     }
     
 }
