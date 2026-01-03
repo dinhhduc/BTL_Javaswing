@@ -147,12 +147,48 @@ public class FormTrangchu extends JFrame {
             pnlContent.revalidate();
             pnlContent.repaint();
         });
-        btnDocGia.addActionListener(e -> showScreen("Quản lý Độc Giả"));
+        btnDocGia.addActionListener(e -> {
+            pnlContent.removeAll();
+
+            FormDocGia p = new FormDocGia();
+            new QLTV.Controller.DocGiaController(p);
+
+            pnlContent.add(p, BorderLayout.CENTER);
+            pnlContent.revalidate();
+            pnlContent.repaint();
+        });
         btnThuThu.addActionListener(e -> showScreen("Quản lý Thủ Thư"));
         btnMuonTra.addActionListener(e -> showScreen("Quản lý Mượn Trả"));
         btnViTri.addActionListener(e -> showScreen("Quản lý Vị Trí"));
-        btnKhoa.addActionListener(e -> showScreen("Quản lý Khoa"));
-        btnLop.addActionListener(e -> showScreen("Quản lý Lớp"));
+        btnKhoa.addActionListener(e -> {
+            pnlContent.removeAll();
+
+            FormKhoa p = new FormKhoa();
+            new QLTV.Controller.KhoaController(p);
+
+            pnlContent.add(p, BorderLayout.CENTER);
+            pnlContent.revalidate();
+            pnlContent.repaint();
+        });
+btnLop.addActionListener(e -> {
+    pnlContent.removeAll();
+
+    try {
+        FormLop p = new FormLop();
+        new QLTV.Controller.LopController(p);
+
+        pnlContent.add(p, BorderLayout.CENTER);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this,
+                "Lỗi mở form Lớp: " + ex.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    pnlContent.revalidate();
+    pnlContent.repaint();
+});
+      
         btnTheThuVien.addActionListener(e -> showScreen("Quản lý Thẻ Thư Viện"));
         btnThongKe.addActionListener(e -> showScreen("Thống Kê"));
 

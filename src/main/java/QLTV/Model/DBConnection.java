@@ -13,15 +13,20 @@ import java.sql.SQLException;
  * @author dinhd
  */
 public class DBConnection {
-    private static final String HOST = "localhost";
-    private static final String PORT = "3306";
-    private static final String DB   = "thuvienutt";
+    private static final String URL =
+            "jdbc:mysql://localhost:3306/dbqltv?useSSL=false&serverTimezone=UTC"
+            + "&connectTimeout=3000&socketTimeout=3000";
     private static final String USER = "root";
-    private static final String PASS = "123456";
+    private static final String PASS = "";
 
-    private static final String URL ="jdbc:mysql://" + HOST + ":" + PORT + "/" + DB+ "?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC";
-
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASS);
+    public static Connection getConnection() {
+        try {
+            return DriverManager.getConnection(URL, USER, PASS);
+        } catch (Exception e) {
+            System.out.println("❌ DB error: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }
+
