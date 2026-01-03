@@ -16,6 +16,72 @@ import java.util.List;
  */
 public class SachDAO {
 
+    // ====== LOAD LIST CHO COMBOBOX ======
+    public List<String> findAllMaTG() {
+        String sql = "SELECT MaTG FROM tacgia ORDER BY MaTG ASC";
+        List<String> list = new ArrayList<>();
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(rs.getString("MaTG"));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public List<String> findAllMaTL() {
+        String sql = "SELECT MaTL FROM theloai ORDER BY MaTL ASC";
+        List<String> list = new ArrayList<>();
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(rs.getString("MaTL"));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public List<String> findAllMaNXB() {
+        String sql = "SELECT MaNXB FROM nhaxuatban ORDER BY MaNXB ASC";
+        List<String> list = new ArrayList<>();
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(rs.getString("MaNXB"));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    // ====== CHECK TRÙNG TÊN SÁCH (GIỐNG checkTrungMa bạn đưa) ======
+    public boolean checkTrungTenSach(String tenSach) {
+        String sql = "SELECT 1 FROM sach WHERE TenSach = ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, tenSach);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    // Dùng khi UPDATE: cho phép trùng với chính nó, nhưng không trùng với sách khác
+    public boolean checkTrungTenSachKhacMa(String tenSach, String maSach) {
+        String sql = "SELECT 1 FROM sach WHERE TenSach = ? AND MaSach <> ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, tenSach);
+            ps.setString(2, maSach);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    // ====== CRUD ======
     public List<Sach> findAll() {
         String sql = "SELECT MaSach, MaTG, MaNXB, MaTL, TenSach, NamXB, SoLuong, TinhTrang, MoTa, MaNN, MaViTri FROM sach";
         List<Sach> list = new ArrayList<>();
@@ -24,12 +90,9 @@ public class SachDAO {
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                list.add(map(rs));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            while (rs.next()) list.add(map(rs));
+        } catch (Exception e) { e.printStackTrace(); }
+
         return list;
     }
 
@@ -48,9 +111,8 @@ public class SachDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) list.add(map(rs));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
+
         return list;
     }
 
@@ -62,9 +124,7 @@ public class SachDAO {
 
             bind(ps, s);
             return ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
         return 0;
     }
 
@@ -88,9 +148,7 @@ public class SachDAO {
             ps.setString(11, s.getMasach());
 
             return ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
         return 0;
     }
 
@@ -101,10 +159,27 @@ public class SachDAO {
 
             ps.setString(1, maSach);
             return ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
         return 0;
+    }
+
+    public String taoMaSachMoi() {
+        String sql = "SELECT MaSach FROM sach ORDER BY MaSach DESC LIMIT 1";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (!rs.next()) return "S001";
+
+            String maCu = rs.getString("MaSach"); // S006
+            int so = Integer.parseInt(maCu.substring(1));
+            so++;
+            return String.format("S%03d", so);
+
+        } catch (Exception e) { e.printStackTrace(); }
+
+        return "S001";
     }
 
     private Sach map(ResultSet rs) throws Exception {
@@ -137,29 +212,4 @@ public class SachDAO {
         ps.setString(10, s.getMann());
         ps.setString(11, s.getMavitri());
     }
-    
-    public String taoMaSachMoi() {
-    String sql = "SELECT MaSach FROM sach ORDER BY MaSach DESC LIMIT 1";
-
-    try (Connection con = DBConnection.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
-
-        if (!rs.next()) {
-            return "S001";
-        }
-
-        String maCu = rs.getString("MaSach"); 
-        int so = Integer.parseInt(maCu.substring(1)); 
-        so++;
-
-        return String.format("S%03d", so); 
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return "S001";
-}
-
 }

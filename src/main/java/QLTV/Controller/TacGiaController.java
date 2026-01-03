@@ -27,7 +27,7 @@ public class TacGiaController {
         this.view = view;
         registerEvents();
 
-        loadComboboxFromDB();   // combo từ DB
+        loadComboboxFromDB();
         loadTable();
 
         view.setMaTG(dao.taoMaTGMoi());
@@ -209,7 +209,6 @@ public class TacGiaController {
             while ((line = br.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
 
-                // skip header nếu có
                 if (count == 0 && line.toLowerCase().contains("matg")) {
                     continue;
                 }
@@ -247,7 +246,7 @@ public class TacGiaController {
              java.io.BufferedWriter bw = new java.io.BufferedWriter(osw);
              java.io.PrintWriter pw = new java.io.PrintWriter(bw)) {
 
-            pw.print('\uFEFF'); // BOM để Excel đọc đúng tiếng Việt
+            pw.print('\uFEFF');
 
             DefaultTableModel m = view.getModel();
 

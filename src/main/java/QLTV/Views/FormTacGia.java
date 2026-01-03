@@ -292,7 +292,6 @@ public class FormTacGia extends JPanel {
         }
     }
 
-    // ===== getters =====
     public JTextField getTxtSearch() { return txtSearch; }
     public JButton getBtnSearch() { return btnSearch; }
 

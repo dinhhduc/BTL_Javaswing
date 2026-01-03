@@ -107,7 +107,6 @@ public class TacGiaDAO {
         return "TG01";
     }
 
-    // ====== COMBOBOX: lấy dữ liệu có sẵn từ DB ======
     public List<String> getAllGioiTinh() {
         String sql = "SELECT DISTINCT GioiTinh FROM tacgia ORDER BY GioiTinh";
         List<String> list = new ArrayList<>();

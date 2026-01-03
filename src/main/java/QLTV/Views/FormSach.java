@@ -14,16 +14,18 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author dinhd
  */
-public class FormSach extends JPanel{
+public class FormSach extends JPanel {
     private JTextField txtSearch = new JTextField();
     private JButton btnSearch = new JButton("Tìm");
 
-
     private JTextField txtMaSach = new JTextField();
     private JTextField txtTenSach = new JTextField();
-    private JTextField txtTacGia = new JTextField();
-    private JTextField txtTheLoai = new JTextField();
-    private JTextField txtNXB = new JTextField();
+
+    // ===== ĐỔI 3 FIELD NÀY THÀNH COMBOBOX =====
+    private JComboBox<String> cboTacGia = new JComboBox<>();
+    private JComboBox<String> cboTheLoai = new JComboBox<>();
+    private JComboBox<String> cboNXB = new JComboBox<>();
+
     private JTextField txtNamXB = new JTextField();
     private JTextField txtSoLuong = new JTextField();
 
@@ -33,7 +35,6 @@ public class FormSach extends JPanel{
     private JButton btnLamMoi = new JButton("Làm mới");
     private JButton btnNhapFile = new JButton("Nhập file (CSV)");
     private JButton btnXuatFile = new JButton("Xuất file (CSV)");
-
 
     private JTable tblSach;
     private DefaultTableModel model;
@@ -77,14 +78,13 @@ public class FormSach extends JPanel{
         header.add(searchBox, BorderLayout.EAST);
 
         return header;
-}
+    }
 
     private JComponent createBody() {
         JPanel body = new JPanel(new BorderLayout(12, 12));
         body.setOpaque(false);
 
         body.add(createFormCard(), BorderLayout.WEST);
-
         body.add(createTableCard(), BorderLayout.CENTER);
 
         return body;
@@ -112,9 +112,9 @@ public class FormSach extends JPanel{
         int r = 0;
         r = addRow(form, gbc, r, "Mã sách", txtMaSach);
         r = addRow(form, gbc, r, "Tên sách", txtTenSach);
-        r = addRow(form, gbc, r, "Tác giả", txtTacGia);
-        r = addRow(form, gbc, r, "Thể loại", txtTheLoai);
-        r = addRow(form, gbc, r, "Nhà xuất bản", txtNXB);
+        r = addRow(form, gbc, r, "Tác giả", cboTacGia);
+        r = addRow(form, gbc, r, "Thể loại", cboTheLoai);
+        r = addRow(form, gbc, r, "Nhà xuất bản", cboNXB);
         r = addRow(form, gbc, r, "Năm XB", txtNamXB);
         r = addRow(form, gbc, r, "Số lượng", txtSoLuong);
 
@@ -123,7 +123,7 @@ public class FormSach extends JPanel{
         spForm.getViewport().setOpaque(false);
         spForm.setOpaque(false);
         spForm.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        spForm.getVerticalScrollBar().setUnitIncrement(16); 
+        spForm.getVerticalScrollBar().setUnitIncrement(16);
 
         JPanel actions = new JPanel(new GridLayout(3, 2, 10, 10));
         actions.setOpaque(false);
@@ -134,14 +134,14 @@ public class FormSach extends JPanel{
         styleDanger(btnXoa);
         styleGhost(btnLamMoi);
         styleAccent(btnNhapFile);
-        styleAccent(btnXuatFile); 
+        styleAccent(btnXuatFile);
 
         actions.add(btnThem);
         actions.add(btnSua);
         actions.add(btnXoa);
         actions.add(btnLamMoi);
         actions.add(btnNhapFile);
-        actions.add(btnXuatFile); 
+        actions.add(btnXuatFile);
 
         JPanel top = new JPanel(new BorderLayout());
         top.setOpaque(false);
@@ -149,7 +149,7 @@ public class FormSach extends JPanel{
         top.add(new JSeparator(), BorderLayout.SOUTH);
 
         card.add(top, BorderLayout.NORTH);
-        card.add(spForm, BorderLayout.CENTER);  
+        card.add(spForm, BorderLayout.CENTER);
         card.add(actions, BorderLayout.SOUTH);
 
         styleInput(txtMaSach);
@@ -157,9 +157,11 @@ public class FormSach extends JPanel{
         txtMaSach.setBackground(new Color(230, 230, 230));
 
         styleInput(txtTenSach);
-        styleInput(txtTacGia);
-        styleInput(txtTheLoai);
-        styleInput(txtNXB);
+
+        styleCombo(cboTacGia);
+        styleCombo(cboTheLoai);
+        styleCombo(cboNXB);
+
         styleInput(txtNamXB);
         styleInput(txtSoLuong);
 
@@ -180,8 +182,7 @@ public class FormSach extends JPanel{
         form.add(field, gbc);
 
         return row + 2;
-}
-
+    }
 
     private JComponent createTableCard() {
         JPanel card = new RoundedPanel(18);
@@ -197,6 +198,7 @@ public class FormSach extends JPanel{
         model = new DefaultTableModel(cols, 0) {
             @Override public boolean isCellEditable(int row, int col) { return false; }
         };
+
         tblSach = new JTable(model);
         tblSach.setRowHeight(28);
         tblSach.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -225,6 +227,13 @@ public class FormSach extends JPanel{
                 new EmptyBorder(8, 10, 8, 10)
         ));
         f.setBackground(new Color(250, 252, 255));
+    }
+
+    private void styleCombo(JComboBox<String> c) {
+        c.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        c.setPreferredSize(new Dimension(0, 36));
+        c.setBorder(BorderFactory.createLineBorder(new Color(210, 220, 230), 1, true));
+        c.setBackground(Color.WHITE);
     }
 
     private void stylePrimary(JButton b) {
@@ -280,60 +289,67 @@ public class FormSach extends JPanel{
         }
     }
 
+    // ===== getters =====
     public JButton getBtnThem() { return btnThem; }
     public JButton getBtnSua() { return btnSua; }
     public JButton getBtnXoa() { return btnXoa; }
     public JButton getBtnLamMoi() { return btnLamMoi; }
     public JButton getBtnNhapFile() { return btnNhapFile; }
+    public JButton getBtnXuatFile() { return btnXuatFile; }
 
     public JTable getTblSach() { return tblSach; }
     public DefaultTableModel getModel() { return model; }
 
+    public JTextField getTxtSearch() { return txtSearch; }
+    public JButton getBtnSearch() { return btnSearch; }
+
+    // ===== cbo getters để controller đổ dữ liệu =====
+    public JComboBox<String> getCboTacGia() { return cboTacGia; }
+    public JComboBox<String> getCboTheLoai() { return cboTheLoai; }
+    public JComboBox<String> getCboNXB() { return cboNXB; }
+
     public String getMaSach() { return txtMaSach.getText().trim(); }
     public String getTenSach() { return txtTenSach.getText().trim(); }
-    public String getTacGia() { return txtTacGia.getText().trim(); }
-    public String getTheLoai() { return txtTheLoai.getText().trim(); }
-    public String getNXB() { return txtNXB.getText().trim(); }
-    public String getNamXB() { return txtNamXB.getText().trim(); }
-    public String getSoLuong() { return txtSoLuong.getText().trim(); }
-    
-    
-    public void setMaSach(String ma) {
-        txtMaSach.setText(ma);
+
+    // Lấy mã FK từ combo
+    public String getTacGia() {
+        Object o = cboTacGia.getSelectedItem();
+        return o == null ? "" : o.toString().trim();
+    }
+    public String getTheLoai() {
+        Object o = cboTheLoai.getSelectedItem();
+        return o == null ? "" : o.toString().trim();
+    }
+    public String getNXB() {
+        Object o = cboNXB.getSelectedItem();
+        return o == null ? "" : o.toString().trim();
     }
 
+    public String getNamXB() { return txtNamXB.getText().trim(); }
+    public String getSoLuong() { return txtSoLuong.getText().trim(); }
+
+    public void setMaSach(String ma) { txtMaSach.setText(ma); }
 
     public void clearForm() {
         txtMaSach.setText("");
         txtTenSach.setText("");
-        txtTacGia.setText("");
-        txtTheLoai.setText("");
-        txtNXB.setText("");
         txtNamXB.setText("");
         txtSoLuong.setText("");
+
+        if (cboTacGia.getItemCount() > 0) cboTacGia.setSelectedIndex(0);
+        if (cboTheLoai.getItemCount() > 0) cboTheLoai.setSelectedIndex(0);
+        if (cboNXB.getItemCount() > 0) cboNXB.setSelectedIndex(0);
     }
-    
+
     public void setForm(String ma, String ten, String tg, String tl, String nxb, String nam, String sl) {
         txtMaSach.setText(ma);
         txtTenSach.setText(ten);
-        txtTacGia.setText(tg);
-        txtTheLoai.setText(tl);
-        txtNXB.setText(nxb);
+
+        cboTacGia.setSelectedItem(tg);
+        cboTheLoai.setSelectedItem(tl);
+        cboNXB.setSelectedItem(nxb);
+
         txtNamXB.setText(nam);
         txtSoLuong.setText(sl);
     }
-
-    
-    public JTextField getTxtSearch() {
-    return txtSearch;
-    }
-
-    public JButton getBtnSearch() {
-        return btnSearch;
-    }
-    
-    public JButton getBtnXuatFile() {
-        return btnXuatFile;
-    }
-
 }

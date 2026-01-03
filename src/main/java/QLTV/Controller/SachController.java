@@ -24,22 +24,29 @@ public class SachController {
 
     public SachController(FormSach view) {
         this.view = view;
+
+        // ===== INIT COMBO TRƯỚC =====
+        initTacGiaCombo();
+        initTheLoaiCombo();
+        initNXBCombo();
+
         registerEvents();
         loadTable();
-        
-        view.setMaSach(dao.taoMaSachMoi());
 
+        view.setMaSach(dao.taoMaSachMoi());
     }
 
-    private void registerEvents() {        
+    private void registerEvents() {
         view.getBtnThem().addActionListener(e -> handleInsert());
         view.getBtnSua().addActionListener(e -> handleUpdate());
         view.getBtnXoa().addActionListener(e -> handleDelete());
-        view.getBtnLamMoi().addActionListener(e -> view.clearForm());
+        view.getBtnLamMoi().addActionListener(e -> {
+            view.clearForm();
+            view.setMaSach(dao.taoMaSachMoi());
+        });
 
         view.getBtnNhapFile().addActionListener(e -> importCSVToTable());
         view.getBtnXuatFile().addActionListener(e -> exportTableToCSV());
-
 
         view.getTblSach().getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) fillFormFromSelectedRow();
@@ -47,9 +54,27 @@ public class SachController {
 
         try {
             view.getBtnSearch().addActionListener(e -> handleSearch());
-            view.getTxtSearch().addActionListener(e -> handleSearch()); // Enter để tìm
-        } catch (Exception ignored) {
-        }
+            view.getTxtSearch().addActionListener(e -> handleSearch());
+        } catch (Exception ignored) {}
+    }
+
+    // ====== INIT COMBO ======
+    private void initTacGiaCombo() {
+        view.getCboTacGia().removeAllItems();
+        List<String> list = dao.findAllMaTG();
+        for (String x : list) view.getCboTacGia().addItem(x);
+    }
+
+    private void initTheLoaiCombo() {
+        view.getCboTheLoai().removeAllItems();
+        List<String> list = dao.findAllMaTL();
+        for (String x : list) view.getCboTheLoai().addItem(x);
+    }
+
+    private void initNXBCombo() {
+        view.getCboNXB().removeAllItems();
+        List<String> list = dao.findAllMaNXB();
+        for (String x : list) view.getCboNXB().addItem(x);
     }
 
     private void loadTable() {
@@ -64,9 +89,9 @@ public class SachController {
             m.addRow(new Object[]{
                     s.getMasach(),
                     s.getTensach(),
-                    s.getMatg(),   
-                    s.getMatl(),  
-                    s.getManxb(), 
+                    s.getMatg(),
+                    s.getMatl(),
+                    s.getManxb(),
                     s.getNamxb(),
                     s.getSoluong() == null ? "" : s.getSoluong()
             });
@@ -83,12 +108,16 @@ public class SachController {
     }
 
     private void handleInsert() {
-        
         String ma = view.getMaSach();
-        if (ma.isEmpty()) {
-            ma = dao.taoMaSachMoi();
+        if (ma.isEmpty()) ma = dao.taoMaSachMoi();
+
+        // ===== CHECK TRÙNG TÊN SÁCH =====
+        String tenSach = view.getTenSach();
+        if (!tenSach.isEmpty() && dao.checkTrungTenSach(tenSach)) {
+            JOptionPane.showMessageDialog(view, "Tên sách đã tồn tại!");
+            return;
         }
-        
+
         Sach s = readFormToSach(true);
         if (s == null) return;
 
@@ -97,12 +126,27 @@ public class SachController {
             JOptionPane.showMessageDialog(view, "Thêm sách thành công!");
             loadTable();
             view.clearForm();
+            view.setMaSach(dao.taoMaSachMoi());
         } else {
-            JOptionPane.showMessageDialog(view, "Thêm thất bại! Có thể trùng Mã sách hoặc sai mã FK.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Thêm thất bại! Có thể trùng Mã sách hoặc sai mã FK.",
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void handleUpdate() {
+        String ma = view.getMaSach();
+        if (ma.isEmpty()) {
+            JOptionPane.showMessageDialog(view, "Chọn 1 dòng để sửa!");
+            return;
+        }
+
+        // ===== CHECK TRÙNG TÊN SÁCH (TRỪ CHÍNH NÓ) =====
+        String tenSach = view.getTenSach();
+        if (!tenSach.isEmpty() && dao.checkTrungTenSachKhacMa(tenSach, ma)) {
+            JOptionPane.showMessageDialog(view, "Tên sách đã tồn tại!");
+            return;
+        }
+
         Sach s = readFormToSach(true);
         if (s == null) return;
 
@@ -111,7 +155,8 @@ public class SachController {
             JOptionPane.showMessageDialog(view, "Cập nhật thành công!");
             loadTable();
         } else {
-            JOptionPane.showMessageDialog(view, "Cập nhật thất bại! Kiểm tra Mã sách có tồn tại không.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Cập nhật thất bại! Kiểm tra Mã sách có tồn tại không.",
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -133,8 +178,10 @@ public class SachController {
             JOptionPane.showMessageDialog(view, "Xóa thành công!");
             loadTable();
             view.clearForm();
+            view.setMaSach(dao.taoMaSachMoi());
         } else {
-            JOptionPane.showMessageDialog(view, "Xóa thất bại! Sách có thể đang bị tham chiếu (mượn trả/chi tiết...).", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Xóa thất bại! Sách có thể đang bị tham chiếu (mượn trả/chi tiết...).",
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -147,22 +194,24 @@ public class SachController {
             view.setForm(
                     String.valueOf(m.getValueAt(row, 0)),
                     String.valueOf(m.getValueAt(row, 1)),
-                    String.valueOf(m.getValueAt(row, 2)),
-                    String.valueOf(m.getValueAt(row, 3)),
-                    String.valueOf(m.getValueAt(row, 4)),
+                    String.valueOf(m.getValueAt(row, 2)), // MaTG
+                    String.valueOf(m.getValueAt(row, 3)), // MaTL
+                    String.valueOf(m.getValueAt(row, 4)), // MaNXB
                     String.valueOf(m.getValueAt(row, 5)),
                     String.valueOf(m.getValueAt(row, 6))
             );
-        } catch (Exception ex) {
-        }
+        } catch (Exception ignored) {}
     }
 
     private Sach readFormToSach(boolean requireMaSach) {
         String ma = view.getMaSach();
         String ten = view.getTenSach();
-        String maTG = view.getTacGia();    
-        String maTL = view.getTheLoai(); 
-        String maNXB = view.getNXB(); 
+
+        // lấy từ combo
+        String maTG = view.getTacGia();
+        String maTL = view.getTheLoai();
+        String maNXB = view.getNXB();
+
         String namStr = view.getNamXB();
         String slStr = view.getSoLuong();
 
@@ -229,12 +278,15 @@ public class SachController {
                 count++;
             }
 
-            JOptionPane.showMessageDialog(view, "Nhập thành công " + count + " dòng (chỉ lên bảng, chưa lưu DB)!", "OK", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Nhập thành công " + count + " dòng (chỉ lên bảng, chưa lưu DB)!",
+                    "OK", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(view, "Nhập file thất bại! Kiểm tra định dạng CSV.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view, "Nhập file thất bại! Kiểm tra định dạng CSV.",
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     private void exportTableToCSV() {
         JFileChooser fc = new JFileChooser();
         fc.setDialogTitle("Chọn nơi lưu file CSV");
@@ -247,44 +299,40 @@ public class SachController {
         }
 
         try (java.io.OutputStream os = new java.io.FileOutputStream(file);
-            java.io.OutputStreamWriter osw = new java.io.OutputStreamWriter(os, java.nio.charset.StandardCharsets.UTF_8);
-            java.io.BufferedWriter bw = new java.io.BufferedWriter(osw);
-            java.io.PrintWriter pw = new java.io.PrintWriter(bw)) {
+             java.io.OutputStreamWriter osw = new java.io.OutputStreamWriter(os, java.nio.charset.StandardCharsets.UTF_8);
+             java.io.BufferedWriter bw = new java.io.BufferedWriter(osw);
+             java.io.PrintWriter pw = new java.io.PrintWriter(bw)) {
 
-           pw.print('\uFEFF');
+            pw.print('\uFEFF'); // BOM cho Excel nhận UTF-8
 
-           DefaultTableModel m = view.getModel();
+            DefaultTableModel m = view.getModel();
 
-           // ===== Header =====
-           for (int c = 0; c < m.getColumnCount(); c++) {
-               pw.print(m.getColumnName(c));
-               if (c < m.getColumnCount() - 1) pw.print(",");
-           }
-           pw.println();
+            for (int c = 0; c < m.getColumnCount(); c++) {
+                pw.print(m.getColumnName(c));
+                if (c < m.getColumnCount() - 1) pw.print(",");
+            }
+            pw.println();
 
-           // ===== Data =====
-           for (int r = 0; r < m.getRowCount(); r++) {
-               for (int c = 0; c < m.getColumnCount(); c++) {
-                   Object val = m.getValueAt(r, c);
-                   String s = (val == null) ? "" : String.valueOf(val);
+            for (int r = 0; r < m.getRowCount(); r++) {
+                for (int c = 0; c < m.getColumnCount(); c++) {
+                    Object val = m.getValueAt(r, c);
+                    String s = (val == null) ? "" : String.valueOf(val);
 
-                   if (s.contains(",") || s.contains("\"")) {
-                       s = s.replace("\"", "\"\"");
-                       s = "\"" + s + "\"";
-                   }
+                    if (s.contains(",") || s.contains("\"")) {
+                        s = s.replace("\"", "\"\"");
+                        s = "\"" + s + "\"";
+                    }
 
-                   pw.print(s);
-                   if (c < m.getColumnCount() - 1) pw.print(",");
-               }
-               pw.println();
-           }
+                    pw.print(s);
+                    if (c < m.getColumnCount() - 1) pw.print(",");
+                }
+                pw.println();
+            }
 
-           JOptionPane.showMessageDialog(view, "Xuất CSV thành công!");
-       } catch (Exception ex) {
-           ex.printStackTrace();
-           JOptionPane.showMessageDialog(view, "Xuất CSV thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-       }
-
+            JOptionPane.showMessageDialog(view, "Xuất CSV thành công!");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Xuất CSV thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
-    
 }

@@ -11,7 +11,7 @@ package QLTV.Domain;
 public class TacGia {
     private String maTG;
     private String tenTG;
-    private Integer namSinh;   // nullable
+    private Integer namSinh;
     private String gioiTinh;
     private String quocTich;
 
