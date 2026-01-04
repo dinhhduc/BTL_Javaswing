@@ -203,10 +203,15 @@ public class TacGiaController {
 
         try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
             String line;
+            boolean firstLine = true;
             int count = 0;
             DefaultTableModel m = view.getModel();
 
             while ((line = br.readLine()) != null) {
+                if (firstLine){
+                firstLine = false;
+                continue;
+            }
                 if (line.trim().isEmpty()) continue;
 
                 if (count == 0 && line.toLowerCase().contains("matg")) {

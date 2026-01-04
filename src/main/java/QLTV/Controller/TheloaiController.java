@@ -168,9 +168,14 @@ public class TheloaiController {
 
         try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
             String line;
+            boolean firstLine = true;
             int count = 0;
 
             while ((line = br.readLine()) != null) {
+                if (firstLine){
+                firstLine = false;
+                continue;
+            }
                 if (line.trim().isEmpty()) continue;
 
                 String[] p = line.split(",", -1);
