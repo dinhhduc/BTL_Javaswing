@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 public class DBConnection {
     private static final String URL =
-            "jdbc:mysql://localhost:3306/dbqltv?useSSL=false&serverTimezone=UTC"
+            "jdbc:mysql://localhost:3306/thuvienutt?useSSL=false&serverTimezone=UTC"
             + "&connectTimeout=3000&socketTimeout=3000";
     private static final String USER = "root";
     private static final String PASS = "";

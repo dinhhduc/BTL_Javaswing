@@ -36,6 +36,22 @@ public class DocGiaDAO {
     }
 
 
+        public List<String> findAllMaDG() {
+        String sql = "SELECT MaDG FROM docgia ORDER BY MaDG";
+        List<String> list = new ArrayList<>();
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(rs.getString("MaDG"));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+
+    public List<Khoa> findAllKhoa() {
+        String sql = "SELECT MaKhoa, TenKhoa FROM khoa";
+        List<Khoa> list = new ArrayList<>();
+
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
