@@ -136,7 +136,6 @@ public class TheThuVienController {
         TheThuVien t = readForm(ma);
         if (t == null) return;
 
-        // trùng mã thẻ / hoặc 1 độc giả đã có thẻ
         if (dao.existsMaThe(ma) || dao.existsMaDG(t.getMaDG(), "")) {
             JOptionPane.showMessageDialog(view, "Trùng dữ liệu!");
             return;
@@ -196,9 +195,6 @@ public class TheThuVienController {
         }
     }
 
-    // CSV: MaThe,MaDG,NgayCap,NgayHetHan,TrangThai
-    // - y hệt -> skip
-    // - trùng MaThe / MaDG đã có thẻ -> báo "Dòng bị trùng: ..."
     private void importCSVToTable() {
         JFileChooser fc = new JFileChooser();
         fc.setDialogTitle("Chọn file CSV Thẻ");
@@ -238,19 +234,17 @@ public class TheThuVienController {
                         same = true; break;
                     }
                     if (t.getMaThe().equals(maThe)) dupMa = true;
-                    if (t.getMaDG().equals(maDG)) dupDG = true; // 1 DG 1 thẻ
+                    if (t.getMaDG().equals(maDG)) dupDG = true;
                 }
 
                 if (same) { skip++; continue; }
 
-                // check DB thêm cho chắc
                 if (dupMa || dupDG || dao.existsMaThe(maThe) || dao.existsMaDG(maDG, "")) {
                     dup++;
                     JOptionPane.showMessageDialog(view, "Dòng bị trùng: " + maThe + " - " + maDG);
                     continue;
                 }
 
-                // parse date
                 TheThuVien tNew;
                 try {
                     LocalDate nc = LocalDate.parse(ncS);

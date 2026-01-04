@@ -126,7 +126,6 @@ public class KeSachController {
             return;
         }
 
-        // trùng tên kệ (trừ chính nó)
         if (dao.existsTenKe(ten, ma)) {
             JOptionPane.showMessageDialog(view, "Trùng tên kệ!");
             return;
@@ -165,9 +164,6 @@ public class KeSachController {
         }
     }
 
-    // CSV: (MaViTri),TenKe,MoTa
-    // - Nếu CSV có 3 cột: dùng MaViTri
-    // - Nếu CSV có 2 cột: tự sinh MaViTri
     private void importCSVToTable() {
         JFileChooser fc = new JFileChooser();
         fc.setDialogTitle("Chọn file CSV Kệ sách");
@@ -189,20 +185,18 @@ public class KeSachController {
 
                 String ma, ten, moTa;
 
-                // 3 cột: MaViTri, TenKe, MoTa
                 if (p.length >= 3) {
                     ma = p[0].trim();
                     ten = p[1].trim();
                     moTa = p[2].trim();
                 } else {
-                    // 2 cột: TenKe, MoTa (tự sinh mã)
                     ma = "";
                     ten = p[0].trim();
                     moTa = p[1].trim();
                 }
 
                 if (ten.isEmpty()) { skip++; continue; }
-                if (ma.isEmpty()) ma = dao.taoMaViTriMoi(); // tự sinh nếu thiếu
+                if (ma.isEmpty()) ma = dao.taoMaViTriMoi();
 
                 boolean same = false, dupMa = false, dupTen = false;
 
@@ -211,7 +205,7 @@ public class KeSachController {
                     String inMoTa = moTa == null ? "" : moTa;
 
                     if (ks.getMaViTri().equals(ma) && ks.getTenKe().equals(ten) && dbMoTa.equals(inMoTa)) {
-                        same = true; break; // y hệt
+                        same = true; break;
                     }
                     if (ks.getMaViTri().equals(ma)) dupMa = true;
                     if (ks.getTenKe().equals(ten)) dupTen = true;
@@ -219,7 +213,6 @@ public class KeSachController {
 
                 if (same) { skip++; continue; }
 
-                // trùng mã hoặc trùng tên
                 if (dupMa || dupTen || dao.existsMaViTri(ma) || dao.existsTenKe(ten, "")) {
                     dup++;
                     JOptionPane.showMessageDialog(view, "Dòng bị trùng: " + ma + " - " + ten);

@@ -72,6 +72,6 @@ public class TacGia {
     }
     @Override
     public String toString() {
-        return tenTG; // hiển thị trong ComboBox
+        return tenTG;
     }
 }

@@ -33,27 +33,68 @@ public class DocGia {
         this.sdt = sdt;
     }
 
-    public String getMaDG() { return maDG; }
-    public void setMaDG(String maDG) { this.maDG = maDG; }
+    public String getMaDG() {
+        return maDG;
+    }
 
-    public String getMaKhoa() { return maKhoa; }
-    public void setMaKhoa(String maKhoa) { this.maKhoa = maKhoa; }
+    public void setMaDG(String maDG) {
+        this.maDG = maDG;
+    }
 
-    public String getMaLop() { return maLop; }
-    public void setMaLop(String maLop) { this.maLop = maLop; }
+    public String getMaKhoa() {
+        return maKhoa;
+    }
 
-    public String getTenDG() { return tenDG; }
-    public void setTenDG(String tenDG) { this.tenDG = tenDG; }
+    public void setMaKhoa(String maKhoa) {
+        this.maKhoa = maKhoa;
+    }
 
-    public String getGioiTinh() { return gioiTinh; }
-    public void setGioiTinh(String gioiTinh) { this.gioiTinh = gioiTinh; }
+    public String getMaLop() {
+        return maLop;
+    }
 
-    public String getDiaChi() { return diaChi; }
-    public void setDiaChi(String diaChi) { this.diaChi = diaChi; }
+    public void setMaLop(String maLop) {
+        this.maLop = maLop;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getTenDG() {
+        return tenDG;
+    }
 
-    public String getSdt() { return sdt; }
-    public void setSdt(String sdt) { this.sdt = sdt; }
+    public void setTenDG(String tenDG) {
+        this.tenDG = tenDG;
+    }
+
+    public String getGioiTinh() {
+        return gioiTinh;
+    }
+
+    public void setGioiTinh(String gioiTinh) {
+        this.gioiTinh = gioiTinh;
+    }
+
+    public String getDiaChi() {
+        return diaChi;
+    }
+
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSdt() {
+        return sdt;
+    }
+
+    public void setSdt(String sdt) {
+        this.sdt = sdt;
+    }
+
 }

@@ -12,14 +12,35 @@ public class TK_Sach {
     private String maSach;
     private String tenSach;
     private int tongMuon;
-
+    public TK_Sach(){}
     public TK_Sach(String maSach, String tenSach, int tongMuon) {
         this.maSach = maSach;
         this.tenSach = tenSach;
         this.tongMuon = tongMuon;
     }
 
-    public String getMaSach() { return maSach; }
-    public String getTenSach() { return tenSach; }
-    public int getTongMuon() { return tongMuon; }
+    public String getMaSach() {
+        return maSach;
+    }
+
+    public void setMaSach(String maSach) {
+        this.maSach = maSach;
+    }
+
+    public String getTenSach() {
+        return tenSach;
+    }
+
+    public void setTenSach(String tenSach) {
+        this.tenSach = tenSach;
+    }
+
+    public int getTongMuon() {
+        return tongMuon;
+    }
+
+    public void setTongMuon(int tongMuon) {
+        this.tongMuon = tongMuon;
+    }
+
 }

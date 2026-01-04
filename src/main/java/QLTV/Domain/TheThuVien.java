@@ -28,18 +28,44 @@ public class TheThuVien {
         this.trangThai = trangThai;
     }
 
-    public String getMaThe() { return maThe; }
-    public void setMaThe(String maThe) { this.maThe = maThe; }
+    public String getMaThe() {
+        return maThe;
+    }
 
-    public String getMaDG() { return maDG; }
-    public void setMaDG(String maDG) { this.maDG = maDG; }
+    public void setMaThe(String maThe) {
+        this.maThe = maThe;
+    }
 
-    public Date getNgayCap() { return ngayCap; }
-    public void setNgayCap(Date ngayCap) { this.ngayCap = ngayCap; }
+    public String getMaDG() {
+        return maDG;
+    }
 
-    public Date getNgayHetHan() { return ngayHetHan; }
-    public void setNgayHetHan(Date ngayHetHan) { this.ngayHetHan = ngayHetHan; }
+    public void setMaDG(String maDG) {
+        this.maDG = maDG;
+    }
 
-    public String getTrangThai() { return trangThai; }
-    public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
+    public Date getNgayCap() {
+        return ngayCap;
+    }
+
+    public void setNgayCap(Date ngayCap) {
+        this.ngayCap = ngayCap;
+    }
+
+    public Date getNgayHetHan() {
+        return ngayHetHan;
+    }
+
+    public void setNgayHetHan(Date ngayHetHan) {
+        this.ngayHetHan = ngayHetHan;
+    }
+
+    public String getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
+    }
+
 }

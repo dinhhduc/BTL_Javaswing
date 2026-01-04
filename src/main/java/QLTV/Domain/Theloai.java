@@ -37,7 +37,7 @@ public class Theloai {
     }
     @Override
     public String toString() {
-        return tenTL; // hiển thị trong ComboBox
+        return tenTL;
     }
     
 }

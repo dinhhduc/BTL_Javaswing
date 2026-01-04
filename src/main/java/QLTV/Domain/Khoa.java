@@ -37,6 +37,6 @@ public class Khoa {
 
     @Override
     public String toString() {
-        return tenKhoa; // hiển thị trong ComboBox
+        return tenKhoa;
     }
 }

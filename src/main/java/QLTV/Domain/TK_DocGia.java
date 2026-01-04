@@ -13,13 +13,37 @@ package QLTV.Domain;
     private String tenDG;
     private int tongSach;
 
+    public TK_DocGia() {
+    }
+
     public TK_DocGia(String maDG, String tenDG, int tongSach) {
         this.maDG = maDG;
         this.tenDG = tenDG;
         this.tongSach = tongSach;
     }
 
-    public String getMaDG() { return maDG; }
-    public String getTenDG() { return tenDG; }
-    public int getTongSach() { return tongSach; }
+    public String getMaDG() {
+        return maDG;
+    }
+
+    public void setMaDG(String maDG) {
+        this.maDG = maDG;
+    }
+
+    public String getTenDG() {
+        return tenDG;
+    }
+
+    public void setTenDG(String tenDG) {
+        this.tenDG = tenDG;
+    }
+
+    public int getTongSach() {
+        return tongSach;
+    }
+
+    public void setTongSach(int tongSach) {
+        this.tongSach = tongSach;
+    }
+
     }

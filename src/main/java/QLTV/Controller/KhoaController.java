@@ -77,7 +77,6 @@ public class KhoaController {
             return;
         }
 
-        // ===== CHECK TRÙNG TÊN KHOA =====
         if (dao.checkTrungTenKhoa(ten)) {
             JOptionPane.showMessageDialog(view, "Tên khoa đã tồn tại!");
             return;
@@ -107,7 +106,6 @@ public class KhoaController {
            return;
        }
 
-       // ===== CHECK TRÙNG TÊN KHOA (TRỪ CHÍNH NÓ) =====
        if (dao.checkTrungTenKhoaKhacMa(ten, ma)) {
            JOptionPane.showMessageDialog(view, "Tên khoa đã tồn tại!");
            return;
@@ -158,7 +156,6 @@ public class KhoaController {
         );
     }
 
-    // ===== CSV (2 cột) =====
     private void importCSVToTable() {
         JFileChooser fc = new JFileChooser();
         if (fc.showOpenDialog(view) != JFileChooser.APPROVE_OPTION) return;

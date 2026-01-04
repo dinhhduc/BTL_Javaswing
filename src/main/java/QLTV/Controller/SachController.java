@@ -29,7 +29,6 @@ public class SachController {
     public SachController(FormSach view) {
         this.view = view;
 
-        // ===== INIT COMBO TRƯỚC =====
         initTacGiaCombo();
         initTheLoaiCombo();
         initNXBCombo();
@@ -144,7 +143,6 @@ public class SachController {
             return;
         }
 
-        // ===== CHECK TRÙNG TÊN SÁCH (TRỪ CHÍNH NÓ) =====
         String tenSach = view.getTenSach();
         if (!tenSach.isEmpty() && dao.checkTrungTenSachKhacMa(tenSach, ma)) {
             JOptionPane.showMessageDialog(view, "Tên sách đã tồn tại!");
@@ -216,8 +214,6 @@ public class SachController {
     }
     }
 
-
-
     private void fillFormFromSelectedRow() {
         int row = view.getTblSach().getSelectedRow();
         if (row < 0) return;
@@ -232,7 +228,6 @@ public class SachController {
         String namXB = String.valueOf(m.getValueAt(row, 5));
         String soLuong = String.valueOf(m.getValueAt(row, 6));
 
-        // set các field thường
         view.setMaSach(maSach);
         view.setTenSach(tenSach);
         view.setNamXB(namXB);
@@ -248,7 +243,6 @@ public class SachController {
         String ma = view.getMaSach();
         String ten = view.getTenSach();
 
-        // lấy từ combo
         String maTG = view.getTacGia();
         String maTL = view.getTheLoai();
         String maNXB = view.getNXB();
@@ -349,7 +343,7 @@ public class SachController {
              java.io.BufferedWriter bw = new java.io.BufferedWriter(osw);
              java.io.PrintWriter pw = new java.io.PrintWriter(bw)) {
 
-            pw.print('\uFEFF'); // BOM cho Excel nhận UTF-8
+            pw.print('\uFEFF');
 
             DefaultTableModel m = view.getModel();
 

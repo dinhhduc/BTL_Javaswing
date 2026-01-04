@@ -71,7 +71,7 @@ public class NhaXuatBan {
     }
     @Override
     public String toString() {
-        return tenNXB; // hiển thị trong ComboBox
+        return tenNXB;
     }
     
 }

@@ -175,7 +175,7 @@ public class DocGiaDAO {
         return "DG001";
     }
 
-    // ===== check trùng để bắt lỗi =====
+
     public boolean existsEmail(String email, String excludeMaDG) {
         String sql = "SELECT 1 FROM docgia WHERE Email=? AND MaDG<>? LIMIT 1";
         try (Connection con = DBConnection.getConnection();

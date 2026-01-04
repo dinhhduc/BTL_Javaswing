@@ -45,9 +45,8 @@ public class TheloaiController {
             if (!e.getValueIsAdjusting()) fillFormFromSelectedRow();
         });
 
-        // tìm kiếm
         view.getBtnSearch().addActionListener(e -> handleSearch());
-        view.getTxtSearch().addActionListener(e -> handleSearch()); // Enter để tìm
+        view.getTxtSearch().addActionListener(e -> handleSearch());
     }
 
     private void loadTable() {
@@ -76,7 +75,6 @@ public class TheloaiController {
     }
 
     private void handleInsert() {
-        // ma tự tăng
         String ma = view.getMaTL();
         if (ma.isEmpty()) ma = dao.taoMaTLMoi();
 

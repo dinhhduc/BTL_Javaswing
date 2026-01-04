@@ -14,6 +14,9 @@ public class TK_QuaHan {
     private Date hanTra;
     private int soNgayQuaHan;
 
+    public TK_QuaHan() {
+    }
+    
     public TK_QuaHan(String maMT, String tenDG, Date hanTra, int soNgayQuaHan) {
         this.maMT = maMT;
         this.tenDG = tenDG;
@@ -21,8 +24,36 @@ public class TK_QuaHan {
         this.soNgayQuaHan = soNgayQuaHan;
     }
 
-    public String getMaMT() { return maMT; }
-    public String getTenDG() { return tenDG; }
-    public Date getHanTra() { return hanTra; }
-    public int getSoNgayQuaHan() { return soNgayQuaHan; }
+    public String getMaMT() {
+        return maMT;
+    }
+
+    public void setMaMT(String maMT) {
+        this.maMT = maMT;
+    }
+
+    public String getTenDG() {
+        return tenDG;
+    }
+
+    public void setTenDG(String tenDG) {
+        this.tenDG = tenDG;
+    }
+
+    public Date getHanTra() {
+        return hanTra;
+    }
+
+    public void setHanTra(Date hanTra) {
+        this.hanTra = hanTra;
+    }
+
+    public int getSoNgayQuaHan() {
+        return soNgayQuaHan;
+    }
+
+    public void setSoNgayQuaHan(int soNgayQuaHan) {
+        this.soNgayQuaHan = soNgayQuaHan;
+    }
+
 }

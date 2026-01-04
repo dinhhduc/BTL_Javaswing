@@ -74,7 +74,6 @@ public class DocGiaController {
         view.getBtnSearch().addActionListener(e -> handleSearch());
         view.getTxtSearch().addActionListener(e -> handleSearch());
 
-        // cascade: chọn khoa -> load lớp
         view.getCboKhoa().addActionListener(e -> reloadLopBySelectedKhoa());
 
         view.getTblDG().getSelectionModel().addListSelectionListener(e -> {
@@ -201,16 +200,12 @@ public class DocGiaController {
         String email = String.valueOf(m.getValueAt(row, 6));
         String sdt = String.valueOf(m.getValueAt(row, 7));
 
-        // 1. set khoa
         view.setSelectedKhoa(maKhoa);
 
-        // 2. reload lớp theo khoa
         reloadLopBySelectedKhoa();
 
-        // 3. set lớp
         view.setSelectedLop(maLop);
 
-        // 4. set text field
          view.setForm(maDG, maKhoa, maLop, ten, gt, dc, email, sdt);
     }
     private void setSelectedKhoa(String maKhoa) {

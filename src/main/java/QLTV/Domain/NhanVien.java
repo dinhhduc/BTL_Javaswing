@@ -12,6 +12,9 @@ package QLTV.Domain;
 public class NhanVien {
     private String maNV, tenNV, queQuan, gioiTinh, vaiTro, email, sdt;
 
+    public NhanVien() {
+    }
+
     public NhanVien(String maNV, String tenNV, String queQuan, String gioiTinh,
                     String vaiTro, String email, String sdt) {
         this.maNV = maNV;
@@ -22,25 +25,60 @@ public class NhanVien {
         this.email = email;
         this.sdt = sdt;
     }
+    public String getMaNV() {
+        return maNV;
+    }
 
-    public String getMaNV() { return maNV; }
-    public void setMaNV(String maNV) { this.maNV = maNV; }
+    public void setMaNV(String maNV) {
+        this.maNV = maNV;
+    }
 
-    public String getTenNV() { return tenNV; }
-    public void setTenNV(String tenNV) { this.tenNV = tenNV; }
+    public String getTenNV() {
+        return tenNV;
+    }
 
-    public String getQueQuan() { return queQuan; }
-    public void setQueQuan(String queQuan) { this.queQuan = queQuan; }
+    public void setTenNV(String tenNV) {
+        this.tenNV = tenNV;
+    }
 
-    public String getGioiTinh() { return gioiTinh; }
-    public void setGioiTinh(String gioiTinh) { this.gioiTinh = gioiTinh; }
+    public String getQueQuan() {
+        return queQuan;
+    }
 
-    public String getVaiTro() { return vaiTro; }
-    public void setVaiTro(String vaiTro) { this.vaiTro = vaiTro; }
+    public void setQueQuan(String queQuan) {
+        this.queQuan = queQuan;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getGioiTinh() {
+        return gioiTinh;
+    }
 
-    public String getSdt() { return sdt; }
-    public void setSdt(String sdt) { this.sdt = sdt; }
+    public void setGioiTinh(String gioiTinh) {
+        this.gioiTinh = gioiTinh;
+    }
+
+    public String getVaiTro() {
+        return vaiTro;
+    }
+
+    public void setVaiTro(String vaiTro) {
+        this.vaiTro = vaiTro;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSdt() {
+        return sdt;
+    }
+
+    public void setSdt(String sdt) {
+        this.sdt = sdt;
+    }
+
 }
