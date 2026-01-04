@@ -18,7 +18,7 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class TacGiaDAO {
 
-    public List<TacGia> findAll() {
+    public static List<TacGia> findAll() {
         String sql = "SELECT MaTG, TenTG, NamSinh, GioiTinh, QuocTich FROM tacgia";
         List<TacGia> list = new ArrayList<>();
         try (Connection con = DBConnection.getConnection();
@@ -106,6 +106,43 @@ public class TacGiaDAO {
         } catch (Exception e) { e.printStackTrace(); }
         return "TG01";
     }
+    public class ComboItem {
+    private String key;
+    private String value;
+
+    public ComboItem(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public String getKey() { return key; }
+    public String getValue() { return value; }
+
+    @Override
+    public String toString() {
+        return value; // hiển thị Tên
+    }
+}
+
+    public List<ComboItem> findAllTacGiaItem() {
+    String sql = "SELECT MaTG, TenTG FROM tacgia ORDER BY TenTG";
+    List<ComboItem> list = new ArrayList<>();
+    try (Connection con = DBConnection.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            list.add(new ComboItem(
+                rs.getString("MaTG"),
+                rs.getString("TenTG")
+            ));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+
 
     public List<String> getAllGioiTinh() {
         String sql = "SELECT DISTINCT GioiTinh FROM tacgia ORDER BY GioiTinh";
@@ -136,8 +173,8 @@ public class TacGiaDAO {
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
-
-    private TacGia map(ResultSet rs) throws Exception {
+    
+    private static TacGia map(ResultSet rs) throws Exception {
         return new TacGia(
                 rs.getString("MaTG"),
                 rs.getString("TenTG"),

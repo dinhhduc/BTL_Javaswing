@@ -65,6 +65,13 @@ public class NhaXuatBan {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+    public NhaXuatBan(String maNXB, String tenNXB) {
+        this.maNXB = maNXB;
+        this.tenNXB = tenNXB;
+    }
+    @Override
+    public String toString() {
+        return tenNXB; // hiển thị trong ComboBox
+    }
     
 }

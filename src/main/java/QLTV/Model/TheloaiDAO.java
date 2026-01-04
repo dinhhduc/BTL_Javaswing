@@ -115,7 +115,7 @@ public class TheloaiDAO {
         }
         return "TL001";
     }
-
+    
     private Theloai map(ResultSet rs) throws Exception {
         return new Theloai(
                 rs.getString("MaTL"),

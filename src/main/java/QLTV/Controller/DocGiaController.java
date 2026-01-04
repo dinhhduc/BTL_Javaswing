@@ -5,6 +5,8 @@
 package QLTV.Controller;
 
 import QLTV.Domain.DocGia;
+import QLTV.Domain.Khoa;
+import QLTV.Domain.Lop;
 import QLTV.Model.DocGiaDAO;
 import QLTV.Model.KhoaDAO;
 import QLTV.Model.LopDAO;
@@ -38,22 +40,22 @@ public class DocGiaController {
     }
 
     private void initCombos() {
-        // Load MaKhoa
-        view.getCboMaKhoa().removeAllItems();
-        List<String> maKhoas = khoaDAO.findAllMaKhoa();
-        for (String mk : maKhoas) view.getCboMaKhoa().addItem(mk);
+        view.getCboKhoa().removeAllItems();
+        for (Khoa k : khoaDAO.findAll()) {
+            view.getCboKhoa().addItem(k);
+        }
 
-        // Load MaLop theo khoa đang chọn
         reloadLopBySelectedKhoa();
     }
 
     private void reloadLopBySelectedKhoa() {
-        String maKhoa = (String) view.getCboMaKhoa().getSelectedItem();
-        view.getCboMaLop().removeAllItems();
-        if (maKhoa == null) return;
+        Khoa k = (Khoa) view.getCboKhoa().getSelectedItem();
+        view.getCboLop().removeAllItems();
+        if (k == null) return;
 
-        List<String> maLops = lopDAO.findMaLopByMaKhoa(maKhoa);
-        for (String ml : maLops) view.getCboMaLop().addItem(ml);
+        for (Lop l : lopDAO.findMaLopByMaKhoa(k.getMaKhoa())) {
+            view.getCboLop().addItem(l);
+        }
     }
 
     private void registerEvents() {
@@ -73,7 +75,7 @@ public class DocGiaController {
         view.getTxtSearch().addActionListener(e -> handleSearch());
 
         // cascade: chọn khoa -> load lớp
-        view.getCboMaKhoa().addActionListener(e -> reloadLopBySelectedKhoa());
+        view.getCboKhoa().addActionListener(e -> reloadLopBySelectedKhoa());
 
         view.getTblDG().getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) fillFormFromSelectedRow();
@@ -189,6 +191,7 @@ public class DocGiaController {
         if (row < 0) return;
 
         DefaultTableModel m = view.getModel();
+
         String maDG = String.valueOf(m.getValueAt(row, 0));
         String maKhoa = String.valueOf(m.getValueAt(row, 1));
         String maLop = String.valueOf(m.getValueAt(row, 2));
@@ -198,17 +201,46 @@ public class DocGiaController {
         String email = String.valueOf(m.getValueAt(row, 6));
         String sdt = String.valueOf(m.getValueAt(row, 7));
 
-        // set khoa -> reload lớp -> set lớp
-        view.getCboMaKhoa().setSelectedItem(maKhoa);
-        reloadLopBySelectedKhoa();
-        view.getCboMaLop().setSelectedItem(maLop);
+        // 1. set khoa
+        view.setSelectedKhoa(maKhoa);
 
-        view.setForm(maDG, maKhoa, maLop, ten, gt, dc, email, sdt);
+        // 2. reload lớp theo khoa
+        reloadLopBySelectedKhoa();
+
+        // 3. set lớp
+        view.setSelectedLop(maLop);
+
+        // 4. set text field
+         view.setForm(maDG, maKhoa, maLop, ten, gt, dc, email, sdt);
+    }
+    private void setSelectedKhoa(String maKhoa) {
+        for (int i = 0; i < view.getCboKhoa().getItemCount(); i++) {
+            if (view.getCboKhoa().getItemAt(i).getMaKhoa().equals(maKhoa)) {
+                view.getCboKhoa().setSelectedIndex(i);
+                break;
+            }
+        }
     }
 
+    private void setSelectedLop(String maLop) {
+        for (int i = 0; i < view.getCboLop().getItemCount(); i++) {
+            if (view.getCboLop().getItemAt(i).getMaLop().equals(maLop)) {
+                view.getCboLop().setSelectedIndex(i);
+                break;
+            }
+        }
+    }
     private DocGia readForm(String ma) {
-        String maKhoa = view.getMaKhoa();
-        String maLop = view.getMaLop();
+        Khoa k = (Khoa) view.getCboKhoa().getSelectedItem();
+        Lop l = (Lop) view.getCboLop().getSelectedItem();
+
+        if (k == null || l == null) {
+            JOptionPane.showMessageDialog(view, "Chọn Khoa và Lớp!");
+            return null;
+        }
+
+        String maKhoa = k.getMaKhoa();
+        String maLop = l.getMaLop();
         String ten = view.getTenDG();
         String gt = view.getGioiTinh();
         String dc = view.getDiaChi();

@@ -5,6 +5,8 @@
 package QLTV.Model;
 
 import QLTV.Domain.DocGia;
+import QLTV.Domain.Khoa;
+import QLTV.Domain.Lop;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +20,7 @@ import java.util.List;
 
 
 public class DocGiaDAO {
-
+    
     public List<DocGia> findAll() {
         String sql = "SELECT MaDG, MaKhoa, MaLop, TenDG, GioiTinh, DiaChi, Email, Sdt FROM docgia";
         List<DocGia> list = new ArrayList<>();
@@ -32,18 +34,45 @@ public class DocGiaDAO {
 
         return list;
     }
-        public List<String> findAllMaDG() {
-        String sql = "SELECT MaDG FROM docgia ORDER BY MaDG";
-        List<String> list = new ArrayList<>();
+
+
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) list.add(rs.getString("MaDG"));
-        } catch (Exception e) { e.printStackTrace(); }
+
+            while (rs.next()) {
+                list.add(new Khoa(
+                    rs.getString("MaKhoa"),
+                    rs.getString("TenKhoa")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
+    public List<Lop> findAllLop(String maKhoa) {
+        String sql = "SELECT MaLop, TenLop, MaKhoa FROM lop WHERE MaKhoa=?";
+        List<Lop> list = new ArrayList<>();
 
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
+            ps.setString(1, maKhoa);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new Lop(
+                        rs.getString("MaLop"),
+                        rs.getString("TenLop"),
+                        rs.getString("MaKhoa")
+                    ));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
     public List<DocGia> search(String keyword) {
         String sql = "SELECT MaDG, MaKhoa, MaLop, TenDG, GioiTinh, DiaChi, Email, Sdt FROM docgia " +
                      "WHERE MaDG LIKE ? OR TenDG LIKE ? OR Email LIKE ? OR Sdt LIKE ? OR MaKhoa LIKE ? OR MaLop LIKE ?";

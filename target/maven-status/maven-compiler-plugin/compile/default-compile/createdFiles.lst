@@ -57,6 +57,7 @@ QLTV\Controller\NhaXuatBanController.class
 QLTV\Views\FormTheThuVien$RoundedPanel.class
 QLTV\Views\FormTheloai$1.class
 QLTV\Controller\ThongKeController.class
+QLTV\Model\TacGiaDAO$ComboItem.class
 QLTV\Views\FormThongKe.class
 QLTV\Domain\NhaXuatBan.class
 QLTV\Domain\Theloai.class

@@ -4,6 +4,7 @@
  */
 package QLTV.Controller;
 
+import QLTV.Domain.Khoa;
 import QLTV.Domain.Lop;
 import QLTV.Model.KhoaDAO;
 import QLTV.Model.LopDAO;
@@ -11,6 +12,7 @@ import QLTV.Views.FormLop;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -33,13 +35,26 @@ public class LopController {
 
         view.setMaLop(dao.taoMaLopMoi());
     }
-
     private void initKhoaCombo() {
-        view.getCboMaKhoa().removeAllItems();
-        List<String> maKhoas = khoaDAO.findAllMaKhoa();
-        for (String mk : maKhoas) view.getCboMaKhoa().addItem(mk);
+        view.getCboKhoa().removeAllItems();
+        for (Khoa k : khoaDAO.findAll()) {
+            view.getCboKhoa().addItem(k);
+        }
     }
 
+    private Lop readForm() {
+        Khoa k = (Khoa) view.getCboKhoa().getSelectedItem();
+        if (k == null) {
+            JOptionPane.showMessageDialog(view, "Chọn khoa!");
+            return null;
+        }
+
+        String maKhoa = k.getMaKhoa();
+        String maLop = view.getMaLop();
+        String tenLop = view.getTenLop();
+
+        return new Lop(maLop, tenLop,maKhoa);
+    }
     private void registerEvents() {
         view.getBtnThem().addActionListener(e -> handleInsert());
         view.getBtnSua().addActionListener(e -> handleUpdate());
@@ -169,14 +184,16 @@ public class LopController {
 
     private void fillFormFromSelectedRow() {
         int row = view.getTblLop().getSelectedRow();
-        if (row < 0) return;
+            if (row < 0) return;
 
         DefaultTableModel m = view.getModel();
-        view.setForm(
-                String.valueOf(m.getValueAt(row, 0)),
-                String.valueOf(m.getValueAt(row, 1)),
-                String.valueOf(m.getValueAt(row, 2))
-        );
+        String maLop = m.getValueAt(row, 0).toString();
+        String tenLop = m.getValueAt(row, 1).toString();
+        String maKhoa = m.getValueAt(row, 2).toString();
+
+
+        setSelectedKhoa(maKhoa);
+        view.setForm(maLop, tenLop);
     }
 
     private void importCSVToTable() {
@@ -293,6 +310,15 @@ public class LopController {
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(view, "Xuất CSV thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void setSelectedKhoa(String maKhoa) {
+    JComboBox<Khoa> cbo = view.getCboKhoa();
+        for (int i = 0; i < cbo.getItemCount(); i++) {
+            if (cbo.getItemAt(i).getMaKhoa().equals(maKhoa)) {
+                cbo.setSelectedIndex(i);
+                break;
+            }
         }
     }
 }

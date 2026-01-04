@@ -4,7 +4,10 @@
  */
 package QLTV.Model;
 
+import QLTV.Domain.NhaXuatBan;
 import QLTV.Domain.Sach;
+import QLTV.Domain.TacGia;
+import QLTV.Domain.Theloai;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,36 +19,62 @@ import java.util.List;
  */
 public class SachDAO {
 
-    public List<String> findAllMaTG() {
-        String sql = "SELECT MaTG FROM tacgia ORDER BY MaTG ASC";
-        List<String> list = new ArrayList<>();
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
+    public List<TacGia> findAllTacGiaForSach() {
+        List<TacGia> list = new ArrayList<>();
+        String sql = "SELECT MaTG, TenTG FROM tacgia";
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) list.add(rs.getString("MaTG"));
-        } catch (Exception e) { e.printStackTrace(); }
+
+            while (rs.next()) {
+                list.add(new TacGia(
+                    rs.getString("MaTG"),
+                    rs.getString("TenTG")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
-    public List<String> findAllMaTL() {
-        String sql = "SELECT MaTL FROM theloai ORDER BY MaTL ASC";
-        List<String> list = new ArrayList<>();
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
+    public List<Theloai> findAllTheLoaiForSach() {
+        List<Theloai> list = new ArrayList<>();
+        String sql = "SELECT MaTL, TenTL FROM theloai";
+
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) list.add(rs.getString("MaTL"));
-        } catch (Exception e) { e.printStackTrace(); }
+
+            while (rs.next()) {
+                list.add(new Theloai(
+                    rs.getString("MaTL"),
+                    rs.getString("TenTL")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 
-    public List<String> findAllMaNXB() {
-        String sql = "SELECT MaNXB FROM nhaxuatban ORDER BY MaNXB ASC";
-        List<String> list = new ArrayList<>();
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
+    public List<NhaXuatBan> findAllNhaXuatBanForSach() {
+        List<NhaXuatBan> list = new ArrayList<>();
+        String sql = "SELECT MaNXB, TenNXB FROM nhaxuatban";
+
+        try (Connection c = DBConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) list.add(rs.getString("MaNXB"));
-        } catch (Exception e) { e.printStackTrace(); }
+
+            while (rs.next()) {
+                list.add(new NhaXuatBan(
+                    rs.getString("MaNXB"),
+                    rs.getString("TenNXB")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 

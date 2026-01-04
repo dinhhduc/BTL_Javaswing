@@ -65,6 +65,13 @@ public class TacGia {
     public void setQuocTich(String quocTich) {
         this.quocTich = quocTich;
     }
-
     
+    public TacGia(String maTG, String tenTG) {
+        this.maTG = maTG;
+        this.tenTG = tenTG;
+    }
+    @Override
+    public String toString() {
+        return tenTG; // hiển thị trong ComboBox
+    }
 }

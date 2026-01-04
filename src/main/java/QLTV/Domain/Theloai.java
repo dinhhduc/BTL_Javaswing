@@ -35,6 +35,9 @@ public class Theloai {
     public void setTenTL(String tenTL) {
         this.tenTL = tenTL;
     }
-    
+    @Override
+    public String toString() {
+        return tenTL; // hiển thị trong ComboBox
+    }
     
 }

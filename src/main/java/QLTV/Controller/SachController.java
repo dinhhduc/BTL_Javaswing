@@ -4,9 +4,13 @@
  */
 package QLTV.Controller;
 
+import QLTV.Domain.NhaXuatBan;
 import QLTV.Domain.Sach;
+import QLTV.Domain.TacGia;
+import QLTV.Domain.Theloai;
 import QLTV.Model.SachDAO;
 import QLTV.Views.FormSach;
+import QLTV.Model.TacGiaDAO;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -60,21 +64,23 @@ public class SachController {
 
     private void initTacGiaCombo() {
         view.getCboTacGia().removeAllItems();
-        List<String> list = dao.findAllMaTG();
-        for (String x : list) view.getCboTacGia().addItem(x);
+        for (TacGia tg : dao.findAllTacGiaForSach()) {
+            view.getCboTacGia().addItem(tg);
+        }
     }
 
     private void initTheLoaiCombo() {
         view.getCboTheLoai().removeAllItems();
-        List<String> list = dao.findAllMaTL();
-        for (String x : list) view.getCboTheLoai().addItem(x);
+        for (Theloai tl : dao.findAllTheLoaiForSach()) {
+            view.getCboTheLoai().addItem(tl);
+        }
     }
 
     private void initNXBCombo() {
         view.getCboNXB().removeAllItems();
-        List<String> list = dao.findAllMaNXB();
-        for (String x : list) view.getCboNXB().addItem(x);
-    }
+        for (NhaXuatBan nxb : dao.findAllNhaXuatBanForSach()) {
+            view.getCboNXB().addItem(nxb);
+        }    }
 
     private void loadTable() {
         List<Sach> list = dao.findAll();
@@ -182,24 +188,61 @@ public class SachController {
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+    private void setSelectedTacGia(String maTG) {
+    JComboBox<TacGia> cbo = view.getCboTacGia();
+    for (int i = 0; i < cbo.getItemCount(); i++) {
+        if (cbo.getItemAt(i).getMaTG().equals(maTG)) {
+            cbo.setSelectedIndex(i);
+            break;
+        }
+    }
+    }
+    private void setSelectedTheLoai(String maTL) {
+    JComboBox<Theloai> cbo = view.getCboTheLoai();
+    for (int i = 0; i < cbo.getItemCount(); i++) {
+        if (cbo.getItemAt(i).getMaTL().equals(maTL)) {
+            cbo.setSelectedIndex(i);
+            break;
+        }
+    }
+    }
+    private void setSelectedNhaXuatBan(String maNXB) {
+    JComboBox<NhaXuatBan> cbo = view.getCboNXB();
+    for (int i = 0; i < cbo.getItemCount(); i++) {
+        if (cbo.getItemAt(i).getMaNXB().equals(maNXB)) {
+            cbo.setSelectedIndex(i);
+            break;
+        }
+    }
+    }
+
+
 
     private void fillFormFromSelectedRow() {
         int row = view.getTblSach().getSelectedRow();
         if (row < 0) return;
 
         DefaultTableModel m = view.getModel();
-        try {
-            view.setForm(
-                    String.valueOf(m.getValueAt(row, 0)),
-                    String.valueOf(m.getValueAt(row, 1)),
-                    String.valueOf(m.getValueAt(row, 2)), // MaTG
-                    String.valueOf(m.getValueAt(row, 3)), // MaTL
-                    String.valueOf(m.getValueAt(row, 4)), // MaNXB
-                    String.valueOf(m.getValueAt(row, 5)),
-                    String.valueOf(m.getValueAt(row, 6))
-            );
-        } catch (Exception ignored) {}
+
+        String maSach = String.valueOf(m.getValueAt(row, 0));
+        String tenSach = String.valueOf(m.getValueAt(row, 1));
+        String maTG = String.valueOf(m.getValueAt(row, 2));
+        String maTL = String.valueOf(m.getValueAt(row, 3));
+        String maNXB = String.valueOf(m.getValueAt(row, 4));
+        String namXB = String.valueOf(m.getValueAt(row, 5));
+        String soLuong = String.valueOf(m.getValueAt(row, 6));
+
+        // set các field thường
+        view.setMaSach(maSach);
+        view.setTenSach(tenSach);
+        view.setNamXB(namXB);
+        view.setSoLuong(soLuong);
+
+        setSelectedTacGia(maTG);
+        setSelectedTheLoai(maTL);
+        setSelectedNhaXuatBan(maNXB);
     }
+
 
     private Sach readFormToSach(boolean requireMaSach) {
         String ma = view.getMaSach();

@@ -44,4 +44,8 @@ public class Lop {
     public void setMaKhoa(String maKhoa) {
         this.maKhoa = maKhoa;
     }
+    @Override
+    public String toString(){
+        return tenLop;
+    }
 }

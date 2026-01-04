@@ -4,6 +4,9 @@
  */
 package QLTV.Views;
 
+import QLTV.Domain.NhaXuatBan;
+import QLTV.Domain.TacGia;
+import QLTV.Domain.Theloai;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -22,9 +25,9 @@ public class FormSach extends JPanel {
     private JTextField txtTenSach = new JTextField();
 
     // ===== ĐỔI 3 FIELD NÀY THÀNH COMBOBOX =====
-    private JComboBox<String> cboTacGia = new JComboBox<>();
-    private JComboBox<String> cboTheLoai = new JComboBox<>();
-    private JComboBox<String> cboNXB = new JComboBox<>();
+    private JComboBox<TacGia> cboTacGia = new JComboBox<>();
+    private JComboBox<Theloai> cboTheLoai = new JComboBox<>();
+    private JComboBox<NhaXuatBan> cboNXB = new JComboBox<>();
 
     private JTextField txtNamXB = new JTextField();
     private JTextField txtSoLuong = new JTextField();
@@ -229,7 +232,7 @@ public class FormSach extends JPanel {
         f.setBackground(new Color(250, 252, 255));
     }
 
-    private void styleCombo(JComboBox<String> c) {
+    private void styleCombo(JComboBox<?> c) {
         c.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         c.setPreferredSize(new Dimension(0, 36));
         c.setBorder(BorderFactory.createLineBorder(new Color(210, 220, 230), 1, true));
@@ -304,31 +307,42 @@ public class FormSach extends JPanel {
     public JButton getBtnSearch() { return btnSearch; }
 
     // ===== cbo getters để controller đổ dữ liệu =====
-    public JComboBox<String> getCboTacGia() { return cboTacGia; }
-    public JComboBox<String> getCboTheLoai() { return cboTheLoai; }
-    public JComboBox<String> getCboNXB() { return cboNXB; }
+    public JComboBox<TacGia> getCboTacGia() { return cboTacGia; }
+    public JComboBox<Theloai> getCboTheLoai() { return cboTheLoai; }
+    public JComboBox<NhaXuatBan> getCboNXB() { return cboNXB; }
 
     public String getMaSach() { return txtMaSach.getText().trim(); }
     public String getTenSach() { return txtTenSach.getText().trim(); }
 
     // Lấy mã FK từ combo
     public String getTacGia() {
-        Object o = cboTacGia.getSelectedItem();
-        return o == null ? "" : o.toString().trim();
+        TacGia tg = (TacGia) cboTacGia.getSelectedItem();
+        return tg == null ? "" : tg.getMaTG();
     }
     public String getTheLoai() {
-        Object o = cboTheLoai.getSelectedItem();
-        return o == null ? "" : o.toString().trim();
+        Theloai tl = (Theloai) cboTheLoai.getSelectedItem();
+        return tl == null ? "" : tl.getMaTL();
     }
     public String getNXB() {
-        Object o = cboNXB.getSelectedItem();
-        return o == null ? "" : o.toString().trim();
+        NhaXuatBan nxb = (NhaXuatBan) cboNXB.getSelectedItem();
+        return nxb == null ? "" : nxb.getMaNXB();
     }
 
     public String getNamXB() { return txtNamXB.getText().trim(); }
     public String getSoLuong() { return txtSoLuong.getText().trim(); }
-
+    
     public void setMaSach(String ma) { txtMaSach.setText(ma); }
+    public void setTenSach(String s) {
+        txtTenSach.setText(s);
+    }
+
+    public void setNamXB(String s) {
+        txtNamXB.setText(s);
+    }
+
+    public void setSoLuong(String s) {
+        txtSoLuong.setText(s);
+    }
 
     public void clearForm() {
         txtMaSach.setText("");

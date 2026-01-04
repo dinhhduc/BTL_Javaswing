@@ -4,6 +4,8 @@
  */
 package QLTV.Views;
 
+import QLTV.Domain.Khoa;
+import QLTV.Domain.Lop;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -22,8 +24,8 @@ public class FormDocGia extends JPanel {
     // ===== form fields =====
     private JTextField txtMaDG = new JTextField();
 
-    private JComboBox<String> cboMaKhoa = new JComboBox<>();
-    private JComboBox<String> cboMaLop = new JComboBox<>();
+    private JComboBox<Khoa> cboKhoa = new JComboBox<>();
+    private JComboBox<Lop> cboLop = new JComboBox<>();
     private JTextField txtTenDG = new JTextField();
     private JComboBox<String> cboGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
     private JTextField txtDiaChi = new JTextField();
@@ -114,8 +116,8 @@ public class FormDocGia extends JPanel {
 
         int r = 0;
         r = addRow(form, gbc, r, "Mã độc giả", txtMaDG);
-        r = addRow(form, gbc, r, "Mã khoa", cboMaKhoa);
-        r = addRow(form, gbc, r, "Mã lớp", cboMaLop);
+        r = addRow(form, gbc, r, "Khoa", cboKhoa);
+        r = addRow(form, gbc, r, "lớp", cboLop);
         r = addRow(form, gbc, r, "Tên độc giả", txtTenDG);
         r = addRow(form, gbc, r, "Giới tính", cboGioiTinh);
         r = addRow(form, gbc, r, "Địa chỉ", txtDiaChi);
@@ -162,8 +164,8 @@ public class FormDocGia extends JPanel {
         txtMaDG.setEditable(false);
         txtMaDG.setBackground(new Color(230, 230, 230));
 
-        styleCombo(cboMaKhoa);
-        styleCombo(cboMaLop);
+        styleCombo(cboKhoa);
+        styleCombo(cboLop);
         styleInput(txtTenDG);
         styleCombo(cboGioiTinh);
         styleInput(txtDiaChi);
@@ -312,19 +314,21 @@ public class FormDocGia extends JPanel {
     public JTable getTblDG() { return tblDG; }
     public DefaultTableModel getModel() { return model; }
 
-    public JComboBox<String> getCboMaKhoa() { return cboMaKhoa; }
-    public JComboBox<String> getCboMaLop() { return cboMaLop; }
+    public JComboBox<Khoa> getCboKhoa() { return cboKhoa; }
+    public JComboBox<Lop> getCboLop() { return cboLop; }
     public JComboBox<String> getCboGioiTinh() { return cboGioiTinh; }
 
     public String getMaDG() { return txtMaDG.getText().trim(); }
-    public String getMaKhoa() { return cboMaKhoa.getSelectedItem() == null ? "" : cboMaKhoa.getSelectedItem().toString(); }
-    public String getMaLop() { return cboMaLop.getSelectedItem() == null ? "" : cboMaLop.getSelectedItem().toString(); }
+    public String getKhoa() { return cboKhoa.getSelectedItem() == null ? "" : cboKhoa.getSelectedItem().toString(); }
+    public String getLop() { return cboLop.getSelectedItem() == null ? "" : cboLop.getSelectedItem().toString(); }
     public String getTenDG() { return txtTenDG.getText().trim(); }
     public String getGioiTinh() { return cboGioiTinh.getSelectedItem() == null ? "" : cboGioiTinh.getSelectedItem().toString(); }
     public String getDiaChi() { return txtDiaChi.getText().trim(); }
     public String getEmail() { return txtEmail.getText().trim(); }
     public String getSdt() { return txtSdt.getText().trim(); }
-
+    public Khoa getSelectedKhoa() {return (Khoa) cboKhoa.getSelectedItem();}
+    public Lop getSelectedLop() {return (Lop) cboLop.getSelectedItem();}
+    
     public void setMaDG(String ma) { txtMaDG.setText(ma); }
 
     public void clearForm() {
@@ -335,19 +339,45 @@ public class FormDocGia extends JPanel {
         txtSdt.setText("");
         if (cboGioiTinh.getItemCount() > 0) cboGioiTinh.setSelectedIndex(0);
     }
-
+    public void setSelectedKhoa(String maKhoa) {
+        for (int i = 0; i < cboKhoa.getItemCount(); i++) {
+            if (cboKhoa.getItemAt(i).getMaKhoa().equals(maKhoa)) {
+                cboKhoa.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+    public void setSelectedLop(String maLop) {
+        for (int i = 0; i < cboLop.getItemCount(); i++) {
+            if (cboLop.getItemAt(i).getMaLop().equals(maLop)) {
+                cboLop.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
     public void setForm(String maDG, String maKhoa, String maLop, String tenDG,
                         String gioiTinh, String diaChi, String email, String sdt) {
         txtMaDG.setText(maDG);
 
         // set combobox theo mã nếu có
-        cboMaKhoa.setSelectedItem(maKhoa);
-        cboMaLop.setSelectedItem(maLop);
+        
+        cboKhoa.setSelectedItem(maKhoa);
+        cboLop.setSelectedItem(maLop);
         cboGioiTinh.setSelectedItem(gioiTinh);
 
         txtTenDG.setText(tenDG);
         txtDiaChi.setText(diaChi);
         txtEmail.setText(email);
         txtSdt.setText(sdt);
+    }
+    public void setComboboxItems(
+        java.util.List<Khoa> khoas,
+        java.util.List<Lop> lops) {
+
+        cboKhoa.removeAllItems();
+        for (Khoa k : khoas) cboKhoa.addItem(k);
+
+        cboLop.removeAllItems();
+        for (Lop l : lops) cboLop.addItem(l);
     }
 }

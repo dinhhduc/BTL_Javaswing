@@ -137,7 +137,7 @@ public class NhaXuatBanDAO {
         } catch (Exception e) { e.printStackTrace(); }
         return "NXB001";
     }
-
+    
     private NhaXuatBan map(ResultSet rs) throws Exception {
         return new NhaXuatBan(
                 rs.getString("MaNXB"),
@@ -147,4 +147,5 @@ public class NhaXuatBanDAO {
                 rs.getString("Email")
         );
     }
+    
 }

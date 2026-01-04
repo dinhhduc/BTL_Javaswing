@@ -4,6 +4,7 @@
  */
 package QLTV.Views;
 
+import QLTV.Domain.Khoa;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -20,7 +21,7 @@ public class FormLop extends JPanel {
 
     private JTextField txtMaLop = new JTextField();
     private JTextField txtTenLop = new JTextField();
-    private JComboBox<String> cboMaKhoa = new JComboBox<>();
+    private JComboBox<Khoa> cboKhoa = new JComboBox<>();
 
     private JButton btnThem = new JButton("Thêm");
     private JButton btnSua = new JButton("Sửa");
@@ -101,7 +102,7 @@ public class FormLop extends JPanel {
         int r = 0;
         r = addRow(form, gbc, r, "Mã lớp", txtMaLop);
         r = addRow(form, gbc, r, "Tên lớp", txtTenLop);
-        r = addRow(form, gbc, r, "Mã khoa", cboMaKhoa);
+        r = addRow(form, gbc, r, "Khoa", cboKhoa);
 
         JPanel actions = new JPanel(new GridLayout(3, 2, 10, 10));
         actions.setOpaque(false);
@@ -135,7 +136,7 @@ public class FormLop extends JPanel {
         txtMaLop.setBackground(new Color(230, 230, 230));
 
         styleInput(txtTenLop);
-        styleCombo(cboMaKhoa);
+        styleCombo(cboKhoa);
 
         return card;
     }
@@ -262,9 +263,13 @@ public class FormLop extends JPanel {
 
     public String getMaLop() { return txtMaLop.getText().trim(); }
     public String getTenLop() { return txtTenLop.getText().trim(); }
-    public String getMaKhoa() { return cboMaKhoa.getSelectedItem() == null ? "" : cboMaKhoa.getSelectedItem().toString(); }
+    public String getMaKhoa() {
+        Khoa k = (Khoa) cboKhoa.getSelectedItem();
+        return k == null ? "" : k.getMaKhoa();
+    }
 
-    public JComboBox<String> getCboMaKhoa() { return cboMaKhoa; }
+
+    public JComboBox<Khoa> getCboKhoa() { return cboKhoa; }
 
     public void setMaLop(String ma) { txtMaLop.setText(ma); }
 
@@ -272,9 +277,8 @@ public class FormLop extends JPanel {
         txtTenLop.setText("");
     }
 
-    public void setForm(String ma, String ten, String maKhoa) {
+    public void setForm(String ma, String ten) {
         txtMaLop.setText(ma);
         txtTenLop.setText(ten);
-        cboMaKhoa.setSelectedItem(maKhoa);
     }
 }
