@@ -17,7 +17,7 @@ public class DBConnection {
             "jdbc:mysql://localhost:3306/thuvienutt?useSSL=false&serverTimezone=UTC"
             + "&connectTimeout=3000&socketTimeout=3000";
     private static final String USER = "root";
-    private static final String PASS = "123456";
+    private static final String PASS = "";
 
     public static Connection getConnection() {
         try {

@@ -32,14 +32,19 @@ public class TacGiaDAO {
 
     public List<TacGia> search(String keyword) {
         String sql = "SELECT MaTG, TenTG, NamSinh, GioiTinh, QuocTich " +
-                     "FROM tacgia WHERE MaTG LIKE ? OR TenTG LIKE ?";
+                     "FROM tacgia WHERE MaTG LIKE ? OR TenTG LIKE ? OR GioiTinh LIKE ? or NamSinh = ? OR QuocTich LIKE ?";
         List<TacGia> list = new ArrayList<>();
         String k = "%" + keyword + "%";
+        boolean isYear = keyword.trim().matches("\\d{4}");
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, k);
             ps.setString(2, k);
+            ps.setString(3, k);
+            ps.setInt(4, isYear ? Integer.parseInt(keyword.trim()) : 0);
+            ps.setString(5, k);
+            
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) list.add(map(rs));
@@ -127,13 +132,13 @@ public class TacGiaDAO {
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
-            if (!rs.next()) return "TG01";
+            if (!rs.next()) return "TG001";
             String maCu = rs.getString("MaTG"); // TG06
             int so = Integer.parseInt(maCu.substring(2));
             so++;
-            return String.format("TG%02d", so);
+            return String.format("TG%03d", so);
         } catch (Exception e) { e.printStackTrace(); }
-        return "TG01";
+        return "TG001";
     }
     public class ComboItem {
     private String key;

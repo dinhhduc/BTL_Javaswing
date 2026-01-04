@@ -38,7 +38,10 @@ public class LopDAO {
     }
 
     public List<Lop> search(String keyword) {
-        String sql = "SELECT MaLop, TenLop, MaKhoa FROM lop WHERE MaLop LIKE ? OR TenLop LIKE ? OR MaKhoa LIKE ?";
+        String sql = "SELECT l.MaLop, l.TenLop, l.MaKhoa, k.TenKhoa " +
+                     "FROM lop l " +
+                     "JOIN khoa k ON l.MaKhoa = k.MaKhoa " +
+                     "WHERE (l.MaLop LIKE ? OR l.TenLop LIKE ? OR k.TenKhoa LIKE ?)";
         List<Lop> list = new ArrayList<>();
         String k = "%" + keyword + "%";
 

@@ -90,8 +90,20 @@ public class DocGiaDAO {
         return list;
     }
     public List<DocGia> search(String keyword) {
-        String sql = "SELECT MaDG, MaKhoa, MaLop, TenDG, GioiTinh, DiaChi, Email, Sdt FROM docgia " +
-                     "WHERE MaDG LIKE ? OR TenDG LIKE ? OR Email LIKE ? OR Sdt LIKE ? OR MaKhoa LIKE ? OR MaLop LIKE ?";
+        String sql = "SELECT dg.*, k.TenKhoa, l.TenLop, dg.TenDG, dg.GioiTinh, dg.DiaChi, dg.Email, dg.Sdt " +
+                    "FROM docgia dg " +
+                    "JOIN khoa k ON dg.MaKhoa = k.MaKhoa " +
+                    "JOIN lop l ON dg.MaLop = l.MaLop " +
+                    "WHERE dg.MaDG LIKE ? " +
+                    "OR dg.TenDG LIKE ? " +
+                    "OR dg.Email LIKE ? " +
+                    "OR dg.Sdt LIKE ? " +
+                    "OR dg.GioiTinh LIKE ?"+
+                    "OR dg.DiaChi LIKE ?"+
+                    "OR dg.Email LIKE ?"+
+                    "OR dg.Sdt LIKE ?"+
+                    "OR k.TenKhoa LIKE ? " +
+                    "OR l.TenLop LIKE ?";
         List<DocGia> list = new ArrayList<>();
         String k = "%" + keyword + "%";
 
@@ -104,6 +116,10 @@ public class DocGiaDAO {
             ps.setString(4, k);
             ps.setString(5, k);
             ps.setString(6, k);
+            ps.setString(7, k);
+            ps.setString(8, k);
+            ps.setString(9, k);
+            ps.setString(10, k);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) list.add(map(rs));

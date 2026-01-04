@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 /**
  *
  * @author dinhd
@@ -123,21 +124,39 @@ public class SachDAO {
     }
 
     public List<Sach> search(String keyword) {
-        String sql = "SELECT MaSach, MaTG, MaNXB, MaTL, TenSach, NamXB, SoLuong, TinhTrang, MoTa, MaNN, MaViTri " +
-                     "FROM sach WHERE MaSach LIKE ? OR TenSach LIKE ?";
+        String sql = "SELECT s.MaSach, s.TenSach, s.NamXB, s.SoLuong, s.TinhTrang, s.MoTa, " +
+                     "s.MaTG, tg.TenTG, s.MaNXB, nxb.TenNXB, s.MaTL, tl.TenTL, s.MaNN, nn.TenNN, s.MaViTri, vt.TenKe " +
+                     "FROM sach s " +
+                     "JOIN tacgia tg ON s.MaTG = tg.MaTG " +
+                     "JOIN nhaxuatban nxb ON s.MaNXB = nxb.MaNXB " +
+                     "JOIN theloai tl ON s.MaTL = tl.MaTL " +
+                     "JOIN ngonngu nn ON s.MaNN = nn.MaNN " +
+                     "JOIN vitri vt ON s.MaViTri = vt.MaViTri " +
+                     "WHERE s.MaSach LIKE ? OR s.TenSach LIKE ? OR tg.TenTG LIKE ? OR nxb.TenNXB LIKE ? " +
+                     "OR tl.TenTL LIKE ? OR nn.TenNN LIKE ? OR vt.TenKe LIKE ? OR s.NamXB = ? OR s.TinhTrang LIKE ?";
         List<Sach> list = new ArrayList<>();
         String k = "%" + keyword + "%";
+        boolean isYear = keyword.trim().matches("\\d{4}");
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, k);
             ps.setString(2, k);
+            ps.setString(3, k);
+            ps.setString(4, k);
+            ps.setString(5, k);
+            ps.setString(6, k);
+            ps.setString(7, k);
+            ps.setInt(8, isYear ? Integer.parseInt(keyword.trim()) : 0);
+            ps.setString(9, k);
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) list.add(map(rs));
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+    JOptionPane.showMessageDialog(null, "SEARCH ERROR: " + e.getMessage());
+    e.printStackTrace();}
 
         return list;
     }

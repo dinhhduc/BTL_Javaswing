@@ -27,8 +27,12 @@ public class TheThuVienDAO {
         return list;
     }
     public List<TheThuVien> search(String keyword) {
-        String sql = "SELECT MaThe, MaDG, NgayCap, NgayHetHan, TrangThai FROM thethuvien " +
-                     "WHERE MaThe LIKE ? OR MaDG LIKE ? OR TrangThai LIKE ?";
+        String sql = "SELECT t.MaThe, dg.TenDG, t.NgayCap, t.NgayHetHan, t.TrangThai " +
+                     "FROM thethuvien t " +
+                     "JOIN docgia dg ON t.MaDG = dg.MaDG " +
+                     "WHERE t.MaThe LIKE ? " +
+                     "OR dg.TenDG LIKE ? " +
+                     "OR t.TrangThai LIKE ?";
         String k = "%" + keyword + "%";
         List<TheThuVien> list = new ArrayList<>();
         try (Connection con = DBConnection.getConnection();
