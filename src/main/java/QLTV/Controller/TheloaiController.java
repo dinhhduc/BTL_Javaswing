@@ -79,6 +79,11 @@ public class TheloaiController {
         if (ma.isEmpty()) ma = dao.taoMaTLMoi();
 
         String ten = view.getTenTL();
+        
+        if (!ten.isEmpty() && dao.checkTrungTenTheLoai(ten)) {
+            JOptionPane.showMessageDialog(view, "Tên thể loại đã tồn tại!");
+            return;
+        }
 
         if (ten.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Tên thể loại không được để trống!");
@@ -106,6 +111,12 @@ public class TheloaiController {
             JOptionPane.showMessageDialog(view, "Chọn 1 dòng để sửa!");
             return;
         }
+        
+        if (!ten.isEmpty() && dao.checkTrungTenTheLoaiKhacMa(ten, ma)) {
+            JOptionPane.showMessageDialog(view, "Tên thể loại đã tồn tại!");
+            return;
+        }
+        
         if (ten.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Tên thể loại không được để trống!");
             return;

@@ -124,6 +124,12 @@ public class NhanVienController {
 
         NhanVien nv = readForm(ma);
         if (nv == null) return;
+        
+        String ten = view.getTenNV();
+        if (!ten.isEmpty() && dao.checkTrungTenNV(ten)) {
+            JOptionPane.showMessageDialog(view, "Tên nhân viên đã tồn tại!");
+            return;
+        }
 
         if (dao.existsEmail(nv.getEmail(), "")) {
             JOptionPane.showMessageDialog(view, "Email đã tồn tại!");
@@ -149,6 +155,12 @@ public class NhanVienController {
         String ma = view.getMaNV();
         if (ma.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Chọn 1 dòng để sửa!");
+            return;
+        }
+        
+        String ten = view.getTenNV();
+        if (!ten.isEmpty() && dao.checkTrungTenNVKhacMa(ten, ma)) {
+            JOptionPane.showMessageDialog(view, "Tên nhân viên đã tồn tại!");
             return;
         }
 

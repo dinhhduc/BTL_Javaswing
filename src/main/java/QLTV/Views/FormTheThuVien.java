@@ -24,7 +24,6 @@ public class FormTheThuVien extends JPanel {
     private JTextField txtMaThe = new JTextField();
     private JComboBox<String> cboMaDG = new JComboBox<>();
 
-    // ✅ JDateChooser
     private JDateChooser dcNgayCap = new JDateChooser();
     private JDateChooser dcNgayHetHan = new JDateChooser();
 
@@ -212,7 +211,6 @@ public class FormTheThuVien extends JPanel {
         return card;
     }
 
-    // ===== styles =====
     private void styleInput(JTextField f) {
         f.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         f.setPreferredSize(new Dimension(0, 36));
@@ -238,7 +236,6 @@ public class FormTheThuVien extends JPanel {
         dc.setDateFormatString("yyyy-MM-dd");
         dc.setPreferredSize(new Dimension(0, 36));
         dc.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        // chỉnh field bên trong
         if (dc.getDateEditor() != null && dc.getDateEditor().getUiComponent() instanceof JTextField tf) {
             tf.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(new Color(210, 220, 230), 1, true),
@@ -302,7 +299,6 @@ public class FormTheThuVien extends JPanel {
         }
     }
 
-    // ===== getters =====
     public JTextField getTxtSearch() { return txtSearch; }
     public JButton getBtnSearch() { return btnSearch; }
 

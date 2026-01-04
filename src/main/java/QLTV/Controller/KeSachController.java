@@ -94,7 +94,7 @@ public class KeSachController {
             JOptionPane.showMessageDialog(view, "Không được để trống!");
             return;
         }
-
+        
         // trùng tên kệ
         if (dao.existsTenKe(ten, "")) {
             JOptionPane.showMessageDialog(view, "Trùng tên kệ!");

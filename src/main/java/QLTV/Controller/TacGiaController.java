@@ -88,6 +88,12 @@ public class TacGiaController {
 
         TacGia tg = readForm(ma);
         if (tg == null) return;
+        
+        String tentg = view.getTenTG();
+        if (!tentg.isEmpty() && dao.checkTrungTacGia(tentg)) {
+            JOptionPane.showMessageDialog(view, "Tên tác giả đã tồn tại!");
+            return;
+        }
 
         int ok = dao.insert(tg);
         if (ok > 0) {
@@ -106,6 +112,12 @@ public class TacGiaController {
         String ma = view.getMaTG();
         if (ma.isEmpty()) {
             JOptionPane.showMessageDialog(view, "Chọn 1 dòng để sửa!");
+            return;
+        }
+        
+        String ten = view.getTenTG();
+        if (!ten.isEmpty() && dao.checkTrungTenTacGiaKhacMa(ten, ma)) {
+            JOptionPane.showMessageDialog(view, "Tên tác giả đã tồn tại!");
             return;
         }
 

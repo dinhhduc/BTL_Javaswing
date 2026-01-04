@@ -47,7 +47,7 @@ public class KeSachDAO {
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
-
+    
     public int insert(KeSach ks) {
         String sql = "INSERT INTO kesach(MaViTri, TenKe, MoTa) VALUES(?,?,?)";
         try (Connection con = DBConnection.getConnection();

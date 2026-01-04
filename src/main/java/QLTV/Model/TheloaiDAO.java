@@ -33,6 +33,36 @@ public class TheloaiDAO {
         return list;
     }
 
+    
+    public boolean checkTrungTenTheLoai(String TenTheLoai) {
+        String sql = "SELECT 1 FROM theloai WHERE TenTL = ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, TenTheLoai);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean checkTrungTenTheLoaiKhacMa(String TenTheLoai, String MaTL) {
+        String sql = "SELECT 1 FROM theloai WHERE TenTL = ? AND MaTL <> ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, TenTheLoai);
+            ps.setString(2, MaTL);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+    
     public List<Theloai> search(String keyword) {
         String sql = "SELECT MaTL, TenTL FROM theloai WHERE MaTL LIKE ? OR TenTL LIKE ?";
         List<Theloai> list = new ArrayList<>();

@@ -108,6 +108,12 @@ public class DocGiaController {
 
         DocGia dg = readForm(ma);
         if (dg == null) return;
+        
+        String tendg = view.getTenDG();
+        if (!tendg.isEmpty() && dao.checkTrungTenDocGia(tendg)) {
+            JOptionPane.showMessageDialog(view, "Tên độc giả đã tồn tại!");
+            return;
+        }
 
         if (dao.existsEmail(dg.getEmail(), "")) {
             JOptionPane.showMessageDialog(view, "Email đã tồn tại!");
@@ -140,6 +146,12 @@ public class DocGiaController {
 
         DocGia dg = readForm(ma);
         if (dg == null) return;
+        
+        String ten = view.getTenDG();
+        if (!ten.isEmpty() && dao.checkTrungTenDocGiaKhacMa(ten, ma)) {
+            JOptionPane.showMessageDialog(view, "Tên độc giả đã tồn tại!");
+            return;
+        }
 
         if (dao.existsEmail(dg.getEmail(), dg.getMaDG())) {
             JOptionPane.showMessageDialog(view, "Email đã tồn tại ở độc giả khác!");

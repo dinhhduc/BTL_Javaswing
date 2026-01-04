@@ -55,6 +55,36 @@ public class NhanVienDAO {
 
         return list;
     }
+    
+    
+    public boolean checkTrungTenNV(String ten) {
+        String sql = "SELECT 1 FROM nhanvien WHERE TenNV = ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, ten);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean checkTrungTenNVKhacMa(String ten, String ma) {
+        String sql = "SELECT 1 FROM nhanvien WHERE TenNV = ? AND MaNV <> ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, ten);
+            ps.setString(2, ma);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
 
     public int insert(NhanVien nv) {
         String sql = "INSERT INTO nhanvien(MaNV, TenNV, QueQuan, GioiTinh, VaiTro, Email, Sdt) VALUES(?,?,?,?,?,?,?)";

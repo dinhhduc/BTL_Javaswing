@@ -4,6 +4,7 @@ QLTV\Views\FormTheThuVien.class
 QLTV\Model\DangnhapDAO.class
 QLTV\Views\FormDocGia$1.class
 QLTV\Model\DocGiaDAO.class
+Baitaplon\Run.class
 QLTV\Model\NhaXuatBanDAO.class
 QLTV\Views\FormTacGia.class
 QLTV\Views\FormSach.class
@@ -32,7 +33,6 @@ QLTV\Controller\TheloaiController.class
 QLTV\Model\LopDAO.class
 QLTV\Views\FormNhanVien$1.class
 QLTV\Model\DBConnection.class
-QLTV\Controller\Run.class
 QLTV\Model\NhanVienDAO.class
 QLTV\Domain\Sach.class
 QLTV\Views\FormNXB$RoundedPanel.class

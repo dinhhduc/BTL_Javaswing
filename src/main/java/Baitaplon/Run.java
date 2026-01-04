@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package QLTV.Controller;
+package Baitaplon;
 
+import QLTV.Controller.DangnhapController;
 import QLTV.Views.FormDangnhap;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;

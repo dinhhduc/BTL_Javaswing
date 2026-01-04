@@ -47,6 +47,35 @@ public class TacGiaDAO {
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
+    
+    public boolean checkTrungTacGia(String tentg) {
+        String sql = "SELECT 1 FROM tacgia WHERE TenTG = ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, tentg);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean checkTrungTenTacGiaKhacMa(String tentg, String matg) {
+        String sql = "SELECT 1 FROM tacgia WHERE TenTG = ? AND MaTG <> ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, tentg);
+            ps.setString(2, matg);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
 
     public int insert(TacGia tg) {
         String sql = "INSERT INTO tacgia(MaTG, TenTG, NamSinh, GioiTinh, QuocTich) VALUES(?,?,?,?,?)";

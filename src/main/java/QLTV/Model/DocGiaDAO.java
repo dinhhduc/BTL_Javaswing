@@ -112,6 +112,35 @@ public class DocGiaDAO {
 
         return list;
     }
+    
+    public boolean checkTrungTenDocGia(String tendg) {
+        String sql = "SELECT 1 FROM docgia WHERE TenDG = ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, tendg);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean checkTrungTenDocGiaKhacMa(String ten, String ma) {
+        String sql = "SELECT 1 FROM docgia WHERE TenDG = ? AND MaDG <> ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, ten);
+            ps.setString(2, ma);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
 
     public int insert(DocGia dg) {
         String sql = "INSERT INTO docgia(MaDG, MaKhoa, MaLop, TenDG, GioiTinh, DiaChi, Email, Sdt) VALUES(?,?,?,?,?,?,?,?)";

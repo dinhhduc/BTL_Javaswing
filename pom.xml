@@ -12,7 +12,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>QLTV.Controller.Run</mainClass>
+                    <mainClass>Baitaplon.Run</mainClass>
                 </configuration>
             </plugin>
         </plugins>
@@ -35,7 +35,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>23</maven.compiler.release>
+        <maven.compiler.release>24</maven.compiler.release>
         <exec.mainClass>com.mycompany.baitaplon.Baitaplon</exec.mainClass>
     </properties>
     
