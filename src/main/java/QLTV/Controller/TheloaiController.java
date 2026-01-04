@@ -175,34 +175,66 @@ public class TheloaiController {
         int choose = fc.showOpenDialog(view);
         if (choose != JFileChooser.APPROVE_OPTION) return;
 
+        int readCount = 0;
+        int insertCount = 0;
+
         try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
             String line;
-            boolean firstLine = true;
-            int count = 0;
+
+            br.readLine();
 
             while ((line = br.readLine()) != null) {
-                if (firstLine){
-                firstLine = false;
-                continue;
-            }
                 if (line.trim().isEmpty()) continue;
 
                 String[] p = line.split(",", -1);
                 if (p.length < 2) continue;
 
-                view.getModel().addRow(new Object[]{
-                        p[0].trim(),
-                        p[1].trim()
-                });
-                count++;
+                try {
+                    String maTL = p[0].trim();
+                    String tenTL = p[1].trim();
+
+                    if (maTL.isEmpty() || tenTL.isEmpty()) continue;
+
+                    if (dao.checkTrungTenTheLoai(tenTL)) {
+                        readCount++;
+                        continue;
+                    }
+
+                    Theloai tl = new Theloai(maTL, tenTL);
+
+                    try {
+                        int ok = dao.insert(tl);
+                        if (ok > 0) insertCount++;
+                        readCount++;
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(view,
+                                "Lỗi ở dòng CSV:\n" + line + "\n\nChi tiết:\n" + ex.getMessage(),
+                                "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                        return; 
+                    }
+
+                } catch (Exception rowErr) {
+                    rowErr.printStackTrace();
+                }
             }
 
-            JOptionPane.showMessageDialog(view, "Nhập thành công " + count + " dòng (chỉ lên bảng, chưa lưu DB)!", "OK", JOptionPane.INFORMATION_MESSAGE);
+            loadTable();
+            view.setMaTL(dao.taoMaTLMoi());
+
+            JOptionPane.showMessageDialog(view,
+                    "Đọc hợp lệ: " + readCount + " dòng\n"
+                  + "Đã lưu DB: " + insertCount + " dòng",
+                    "OK", JOptionPane.INFORMATION_MESSAGE);
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(view, "Nhập file thất bại! Kiểm tra CSV.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view,
+                    "Nhập CSV thất bại! Kiểm tra CSV.",
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     private void exportTableToCSV() {
         JFileChooser fc = new JFileChooser();
         fc.setDialogTitle("Chọn nơi lưu file CSV thể loại");

@@ -158,65 +158,68 @@ public class KhoaController {
 
     private void importCSVToTable() {
         JFileChooser fc = new JFileChooser();
+        fc.setDialogTitle("Chọn file CSV Khoa");
         if (fc.showOpenDialog(view) != JFileChooser.APPROVE_OPTION) return;
 
-        List<Khoa> dbList = dao.findAll();
-
-        int insert = 0, skip = 0, dup = 0;
+        int readCount = 0;
+        int insertCount = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
             String line;
-            boolean header = true;
+
+            br.readLine();
 
             while ((line = br.readLine()) != null) {
-                if (header) { header = false; continue; }
                 if (line.trim().isEmpty()) continue;
 
                 String[] p = line.split(",", -1);
                 if (p.length < 2) continue;
 
-                String ma = p[0].trim();
-                String ten = p[1].trim();
-                if (ma.isEmpty() || ten.isEmpty()) continue;
+                try {
+                    String ma = p[0].trim();
+                    String ten = p[1].trim();
 
-                boolean same = false, dupMa = false, dupTen = false;
+                    if (ma.isEmpty() || ten.isEmpty()) continue;
 
-                for (Khoa k : dbList) {
-                    if (k.getMaKhoa().equals(ma) && k.getTenKhoa().equals(ten)) {
-                        same = true; break;
+                    if (dao.checkTrungTenKhoa(ten)) {
+                        readCount++;
+                        continue;
                     }
-                    if (k.getMaKhoa().equals(ma)) dupMa = true;
-                    if (k.getTenKhoa().equals(ten)) dupTen = true;
+
+                    Khoa k = new Khoa(ma, ten);
+
+                    try {
+                        int ok = dao.insert(k);
+                        if (ok > 0) insertCount++;
+                        readCount++;
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(view,
+                                "Lỗi ở dòng CSV:\n" + line + "\n\nChi tiết:\n" + ex.getMessage(),
+                                "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                        return; 
+                    }
+
+                } catch (Exception rowErr) {
+                    rowErr.printStackTrace();
                 }
-
-                if (same) { skip++; continue; }
-
-                if (dupMa || dupTen || dao.checkTrungTenKhoa(ten)) {
-                    dup++;
-                    continue;
-                }
-
-                dao.insert(new Khoa(ma, ten));
-                dbList.add(new Khoa(ma, ten));
-                insert++;
             }
 
             loadTable();
             view.clearForm();
             view.setMaKhoa(dao.taoMaKhoaMoi());
 
-            JOptionPane.showMessageDialog(
-                    view,
-                    "Import xong!\n"
-                  + "Thêm: " + insert + "\n"
-                  + "Bỏ qua: " + skip + "\n"
-                  + "Trùng: " + dup
-            );
+            JOptionPane.showMessageDialog(view,
+                    "Đọc hợp lệ: " + readCount + " dòng\n"
+                  + "Đã lưu DB: " + insertCount + " dòng",
+                    "OK", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(view, "Lỗi nhập file!");
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Lỗi nhập file!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
 
     private void exportTableToCSV() {

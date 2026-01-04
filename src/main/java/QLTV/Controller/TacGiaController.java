@@ -213,38 +213,81 @@ public class TacGiaController {
         int choose = fc.showOpenDialog(view);
         if (choose != JFileChooser.APPROVE_OPTION) return;
 
+        int readCount = 0;
+        int insertCount = 0;
+
         try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
             String line;
-            boolean firstLine = true;
-            int count = 0;
-            DefaultTableModel m = view.getModel();
+
+            br.readLine();
 
             while ((line = br.readLine()) != null) {
-                if (firstLine){
-                firstLine = false;
-                continue;
-            }
                 if (line.trim().isEmpty()) continue;
-
-                if (count == 0 && line.toLowerCase().contains("matg")) {
-                    continue;
-                }
 
                 String[] p = line.split(",", -1);
                 if (p.length < 5) continue;
 
-                m.addRow(new Object[]{
-                    p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim(), p[4].trim()
-                });
-                count++;
+                try {
+                    String maTG = p[0].trim();
+                    String tenTG = p[1].trim();
+                    String namStr = p[2].trim();
+                    String gioiTinh = p[3].trim();
+                    String quocTich = p[4].trim();
+
+                    if (maTG.isEmpty() || tenTG.isEmpty() || gioiTinh.isEmpty() || quocTich.isEmpty()) continue;
+
+                    Integer namSinh = null;
+                    if (!namStr.isEmpty()) {
+                        try {
+                            namSinh = Integer.parseInt(namStr);
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(view,
+                                    "Năm sinh phải là số ở dòng:\n" + line,
+                                    "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+
+                    if (dao.checkTrungTacGia(tenTG)) {
+                        readCount++;
+                        continue;
+                    }
+
+                    TacGia tg = new TacGia(maTG, tenTG, namSinh, gioiTinh, quocTich);
+
+                    try {
+                        int ok = dao.insert(tg);
+                        if (ok > 0) insertCount++;
+                        readCount++;
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(view,
+                                "Lỗi ở dòng CSV:\n" + line + "\n\nChi tiết:\n" + ex.getMessage(),
+                                "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                        return; 
+                    }
+
+                } catch (Exception rowErr) {
+                    rowErr.printStackTrace();
+                }
             }
 
-            JOptionPane.showMessageDialog(view, "Nhập thành công " + count + " dòng (chỉ lên bảng, chưa lưu DB)!");
+            loadTable();
+            loadComboboxFromDB();
+            view.clearForm();
+            view.setMaTG(dao.taoMaTGMoi());
+
+            JOptionPane.showMessageDialog(view,
+                    "Đọc hợp lệ: " + readCount + " dòng\n"
+                  + "Đã lưu DB: " + insertCount + " dòng",
+                    "OK", JOptionPane.INFORMATION_MESSAGE);
+
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(view, "Nhập file thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void exportTableToCSV() {
         JFileChooser fc = new JFileChooser();

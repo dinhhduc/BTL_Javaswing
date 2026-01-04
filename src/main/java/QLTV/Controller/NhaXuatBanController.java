@@ -176,34 +176,69 @@ public class NhaXuatBanController {
         int choose = fc.showOpenDialog(view);
         if (choose != JFileChooser.APPROVE_OPTION) return;
 
+        int readCount = 0;
+        int insertCount = 0;
+
         try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
             String line;
-            boolean firstLine = true;
-            int count = 0;
-            DefaultTableModel m = view.getModel();
+
+            br.readLine();
 
             while ((line = br.readLine()) != null) {
-                if (firstLine){
-                firstLine = false;
-                continue;
-            }
                 if (line.trim().isEmpty()) continue;
 
                 String[] p = line.split(",", -1);
                 if (p.length < 5) continue;
 
-                m.addRow(new Object[]{
-                        p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim(), p[4].trim()
-                });
-                count++;
+                try {
+                    String maNXB = p[0].trim();
+                    String tenNXB = p[1].trim();
+                    String diaChi = p[2].trim();
+                    String sdt = p[3].trim();
+                    String email = p[4].trim();
+
+                    if (maNXB.isEmpty() || tenNXB.isEmpty()) continue;
+
+                    if (dao.checkTrungTenNXB(tenNXB)) {
+                        readCount++; 
+                        continue;
+                    }
+
+                    NhaXuatBan nxb = new NhaXuatBan(maNXB, tenNXB, diaChi, sdt, email);
+
+                    try {
+                        int ok = dao.insert(nxb);
+                        if (ok > 0) insertCount++;
+                        readCount++;
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(view,
+                                "Lỗi ở dòng CSV:\n" + line + "\n\nChi tiết:\n" + ex.getMessage(),
+                                "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                } catch (Exception rowErr) {
+                    rowErr.printStackTrace();
+                }
             }
 
-            JOptionPane.showMessageDialog(view, "Nhập thành công " + count + " dòng (chỉ lên bảng, chưa lưu DB)!");
+            loadTable();
+            view.setMaNXB(dao.taoMaNXBMoi());
+
+            JOptionPane.showMessageDialog(view,
+                    "Đọc hợp lệ: " + readCount + " dòng\n"
+                  + "Đã lưu DB: " + insertCount + " dòng",
+                    "OK", JOptionPane.INFORMATION_MESSAGE);
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(view, "Nhập file thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(view,
+                    "Nhập CSV thất bại!",
+                    "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void exportTableToCSV() {
         JFileChooser fc = new JFileChooser();

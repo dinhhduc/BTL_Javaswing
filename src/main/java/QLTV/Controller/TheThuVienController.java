@@ -197,68 +197,85 @@ public class TheThuVienController {
 
     private void importCSVToTable() {
         JFileChooser fc = new JFileChooser();
-        fc.setDialogTitle("Chọn file CSV Thẻ");
+        fc.setDialogTitle("Chọn file CSV Thẻ thư viện");
         if (fc.showOpenDialog(view) != JFileChooser.APPROVE_OPTION) return;
 
-        List<TheThuVien> dbList = dao.findAll();
-        int insert = 0, skip = 0, dup = 0;
+        int readCount = 0;
+        int insertCount = 0;
+
+        java.util.HashSet<String> validMaDG = new java.util.HashSet<>(docGiaDAO.findAllMaDG());
 
         try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
             String line;
-            boolean header = true;
+
+            br.readLine();
 
             while ((line = br.readLine()) != null) {
-                if (header) { header = false; continue; }
                 if (line.trim().isEmpty()) continue;
 
                 String[] p = line.split(",", -1);
-                if (p.length < 5) { skip++; continue; }
+                if (p.length < 5) continue;
 
-                String maThe = p[0].trim();
-                String maDG  = p[1].trim();
-                String ncS   = p[2].trim();
-                String nhS   = p[3].trim();
-                String tt    = p[4].trim();
-
-                if (maDG.isEmpty() || ncS.isEmpty() || nhS.isEmpty() || tt.isEmpty()) { skip++; continue; }
-                if (maThe.isEmpty()) maThe = dao.taoMaTheMoi();
-
-                boolean same = false, dupMa = false, dupDG = false;
-
-                for (TheThuVien t : dbList) {
-                    if (t.getMaThe().equals(maThe)
-                            && t.getMaDG().equals(maDG)
-                            && String.valueOf(t.getNgayCap()).equals(ncS)
-                            && String.valueOf(t.getNgayHetHan()).equals(nhS)
-                            && t.getTrangThai().equals(tt)) {
-                        same = true; break;
-                    }
-                    if (t.getMaThe().equals(maThe)) dupMa = true;
-                    if (t.getMaDG().equals(maDG)) dupDG = true;
-                }
-
-                if (same) { skip++; continue; }
-
-                if (dupMa || dupDG || dao.existsMaThe(maThe) || dao.existsMaDG(maDG, "")) {
-                    dup++;
-                    JOptionPane.showMessageDialog(view, "Dòng bị trùng: " + maThe + " - " + maDG);
-                    continue;
-                }
-
-                TheThuVien tNew;
                 try {
+                    String maThe = p[0].trim();
+                    String maDG  = p[1].trim();
+                    String ncS   = p[2].trim();
+                    String nhS   = p[3].trim(); 
+                    String tt    = p[4].trim();
+
+                    if (maDG.isEmpty() || ncS.isEmpty() || nhS.isEmpty() || tt.isEmpty()) continue;
+
+                    if (maThe.isEmpty()) maThe = dao.taoMaTheMoi();
+
+                    if (!validMaDG.contains(maDG)) {
+                        JOptionPane.showMessageDialog(view,
+                                "MaDG không tồn tại (FK) ở dòng:\n" + line,
+                                "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     LocalDate nc = LocalDate.parse(ncS);
                     LocalDate nh = LocalDate.parse(nhS);
-                    if (nh.isBefore(nc)) { skip++; continue; }
-                    tNew = new TheThuVien(maThe, maDG, Date.valueOf(nc), Date.valueOf(nh), tt);
-                } catch (Exception ex) {
-                    skip++;
-                    continue;
-                }
 
-                dao.insert(tNew);
-                dbList.add(tNew);
-                insert++;
+                    if (nh.isBefore(nc)) {
+                        JOptionPane.showMessageDialog(view,
+                                "Ngày hết hạn < ngày cấp ở dòng:\n" + line,
+                                "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    TheThuVien tNew = new TheThuVien(
+                            maThe,
+                            maDG,
+                            Date.valueOf(nc),
+                            Date.valueOf(nh),
+                            tt
+                    );
+
+                    if (dao.existsMaThe(maThe) || dao.existsMaDG(maDG, "")) {
+                        readCount++;
+                        continue;
+                    }
+
+                    try {
+                        int ok = dao.insert(tNew);
+                        if (ok > 0) insertCount++;
+                        readCount++;
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(view,
+                                "Lỗi ở dòng CSV:\n" + line + "\n\nChi tiết:\n" + ex.getMessage(),
+                                "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                } catch (Exception rowErr) {
+                    rowErr.printStackTrace();
+                    JOptionPane.showMessageDialog(view,
+                            "Sai định dạng dữ liệu ở dòng:\n" + line,
+                            "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
 
             loadTable();
@@ -267,12 +284,16 @@ public class TheThuVienController {
             view.setMaThe(dao.taoMaTheMoi());
 
             JOptionPane.showMessageDialog(view,
-                    "Import xong!\nThêm: " + insert + "\nBỏ qua: " + skip + "\nTrùng: " + dup);
+                    "Đọc hợp lệ: " + readCount + " dòng\n"
+                  + "Đã lưu DB: " + insertCount + " dòng",
+                    "OK", JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(view, "Lỗi nhập file!");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(view, "Nhập CSV thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void exportTableToCSV() {
         JFileChooser fc = new JFileChooser();

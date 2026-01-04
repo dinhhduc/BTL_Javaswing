@@ -289,43 +289,92 @@ public class SachController {
         return new Sach(ma, maTG, maNXB, maTL, ten, nam, soLuong, tinhTrang, moTa, maNN, maViTri);
     }
 
-    private void importCSVToTable() {
-        JFileChooser fc = new JFileChooser();
-        fc.setDialogTitle("Chọn file CSV danh sách sách");
+        private void importCSVToTable() {
+            JFileChooser fc = new JFileChooser();
+            fc.setDialogTitle("Chọn file CSV danh sách sách");
 
-        int choose = fc.showOpenDialog(view);
-        if (choose != JFileChooser.APPROVE_OPTION) return;
+            int choose = fc.showOpenDialog(view);
+            if (choose != JFileChooser.APPROVE_OPTION) return;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
-            String line;
-            boolean firstLine = true;
-            int count = 0;
+            int readCount = 0;
+            int insertCount = 0;
 
-            while ((line = br.readLine()) != null) {
-                if (firstLine){
-                firstLine = false;
-                continue;
+            try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
+                String line;
+
+                br.readLine();
+
+                while ((line = br.readLine()) != null) {
+                    if (line.trim().isEmpty()) continue;
+
+                    String[] p = line.split(",", -1);
+                    if (p.length < 7) continue;
+
+                    try {
+                        String maSach = p[0].trim();
+                        String tenSach = p[1].trim();
+                        String maTG = p[2].trim();
+                        String maTL = p[3].trim();
+                        String maNXB = p[4].trim();
+                        int namXB = Integer.parseInt(p[5].trim());
+
+                        Integer soLuong = null;
+                        if (!p[6].trim().isEmpty()) {
+                            soLuong = Integer.parseInt(p[6].trim());
+                        }
+
+                        Sach s = new Sach(
+                                maSach,
+                                maTG,
+                                maNXB,
+                                maTL,
+                                tenSach,
+                                namXB,
+                                soLuong,
+                                "Tốt",
+                                "",
+                                "NN01",
+                                "VT01"
+                        );
+
+                        try {
+                            int ok = dao.insert(s);
+                            if (ok > 0) insertCount++;
+                            readCount++;
+
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(view,
+                                    "Lỗi ở dòng CSV:\n" + line + "\n\nChi tiết:\n" + ex.getMessage(),
+                                    "IMPORT THẤT BẠI", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+
+                    } catch (Exception rowErr) {
+                        rowErr.printStackTrace();
+                    }
+                }
+
+                loadTable();
+                view.setMaSach(dao.taoMaSachMoi());
+
+                JOptionPane.showMessageDialog(view,
+                        "Đọc hợp lệ: " + readCount + " dòng\n"
+                      + "Đã lưu DB: " + insertCount + " dòng",
+                        "OK", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(view,
+                        "Nhập CSV thất bại!",
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
-                if (line.trim().isEmpty()) continue;
-
-                String[] p = line.split(",", -1);
-                if (p.length < 7) continue;
-
-                view.getModel().addRow(new Object[]{
-                        p[0].trim(), p[1].trim(), p[2].trim(), p[3].trim(),
-                        p[4].trim(), p[5].trim(), p[6].trim()
-                });
-                count++;
-            }
-
-            JOptionPane.showMessageDialog(view, "Nhập thành công " + count + " dòng (chỉ lên bảng, chưa lưu DB)!",
-                    "OK", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(view, "Nhập file thất bại! Kiểm tra định dạng CSV.",
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
-    }
+
+
+
+
 
     private void exportTableToCSV() {
         JFileChooser fc = new JFileChooser();
