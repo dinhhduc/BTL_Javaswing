@@ -170,24 +170,37 @@ public class FormTrangchu extends JFrame {
             pnlContent.revalidate();
             pnlContent.repaint();
         });
-btnLop.addActionListener(e -> {
-    pnlContent.removeAll();
+        btnLop.addActionListener(e -> {
+            pnlContent.removeAll();
 
-    try {
-        FormLop p = new FormLop();
-        new QLTV.Controller.LopController(p);
+            try {
+                FormLop p = new FormLop();
+                new QLTV.Controller.LopController(p);
 
-        pnlContent.add(p, BorderLayout.CENTER);
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this,
-                "Lỗi mở form Lớp: " + ex.getMessage(),
-                "Error", JOptionPane.ERROR_MESSAGE);
-    }
+                pnlContent.add(p, BorderLayout.CENTER);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this,
+                        "Lỗi mở form Lớp: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
 
-    pnlContent.revalidate();
-    pnlContent.repaint();
-});
+            pnlContent.revalidate();
+            pnlContent.repaint();
+        });
+        btnThongKe.addActionListener(e -> {
+           try{
+               FormThongKe ftk = new FormThongKe();
+               new QLTV.Controller.ThongKeController(ftk);
+               pnlContent.add(ftk, BorderLayout.CENTER);
+           } catch (Exception ex)
+           {
+               JOptionPane.showMessageDialog(this,
+                        "Lỗi mở form: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+               ex.printStackTrace();
+           }
+        });
       
         btnTheThuVien.addActionListener(e -> showScreen("Quản lý Thẻ Thư Viện"));
         btnThongKe.addActionListener(e -> showScreen("Thống Kê"));

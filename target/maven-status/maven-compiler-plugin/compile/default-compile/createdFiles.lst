@@ -13,6 +13,7 @@ QLTV\Domain\TacGia.class
 QLTV\Domain\Dangnhap.class
 QLTV\Views\FormLop.class
 QLTV\Views\FormKhoa$1.class
+QLTV\Model\ThongKeDAO.class
 QLTV\Views\FormNXB$1.class
 QLTV\Domain\Lop.class
 QLTV\Controller\TacGiaController.class
@@ -25,6 +26,7 @@ QLTV\Model\DBConnection.class
 QLTV\Controller\Run.class
 QLTV\Domain\Sach.class
 QLTV\Views\FormNXB$RoundedPanel.class
+QLTV\Domain\TK_QuaHan.class
 QLTV\Views\FormTacGia$RoundedPanel.class
 QLTV\Views\FormTacGia$1.class
 QLTV\Controller\KhoaController.class
@@ -39,10 +41,14 @@ QLTV\Model\KhoaDAO.class
 QLTV\Views\FormLop$1.class
 QLTV\Controller\NhaXuatBanController.class
 QLTV\Views\FormTheloai$1.class
+QLTV\Controller\ThongKeController.class
+QLTV\Views\FormThongKe.class
 QLTV\Domain\NhaXuatBan.class
 QLTV\Domain\Theloai.class
+QLTV\Domain\TK_Sach.class
 QLTV\Views\FormTheloai.class
 QLTV\Model\TacGiaDAO.class
 QLTV\Domain\Khoa.class
+QLTV\Domain\TK_DocGia.class
 QLTV\Views\FormKhoa.class
 QLTV\Views\FormTrangchu.class
