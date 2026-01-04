@@ -51,7 +51,37 @@ public class NhaXuatBanDAO {
         return list;
         
     }
+    
+    public boolean checkTrungTenNXB(String TenNXB) {
+        String sql = "SELECT 1 FROM nhaxuatban WHERE TenNXB = ? LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
+            ps.setString(1, TenNXB);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+//    // Dùng khi UPDATE: cho phép trùng với chính nó, nhưng không trùng với sách khác
+//    public boolean checkTrungTenNXBKhacMa(String tenSach, String maSach) {
+//        String sql = "SELECT 1 FROM sach WHERE TenSach = ? AND MaSach <> ? LIMIT 1";
+//        try (Connection con = DBConnection.getConnection();
+//             PreparedStatement ps = con.prepareStatement(sql)) {
+//
+//            ps.setString(1, tenSach);
+//            ps.setString(2, maSach);
+//            try (ResultSet rs = ps.executeQuery()) {
+//                return rs.next();
+//            }
+//
+//        } catch (Exception e) { e.printStackTrace(); }
+//        return false;
+//    }
+    
     public int insert(NhaXuatBan nxb) {
         String sql = "INSERT INTO nhaxuatban(MaNXB, TenNXB, DiaChi, Sdt, Email) VALUES(?,?,?,?,?)";
         try (Connection con = DBConnection.getConnection();

@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class SachDAO {
 
-    // ====== LOAD LIST CHO COMBOBOX ======
     public List<String> findAllMaTG() {
         String sql = "SELECT MaTG FROM tacgia ORDER BY MaTG ASC";
         List<String> list = new ArrayList<>();
@@ -50,7 +49,6 @@ public class SachDAO {
         return list;
     }
 
-    // ====== CHECK TRÙNG TÊN SÁCH (GIỐNG checkTrungMa bạn đưa) ======
     public boolean checkTrungTenSach(String tenSach) {
         String sql = "SELECT 1 FROM sach WHERE TenSach = ? LIMIT 1";
         try (Connection con = DBConnection.getConnection();
@@ -65,7 +63,6 @@ public class SachDAO {
         return false;
     }
 
-    // Dùng khi UPDATE: cho phép trùng với chính nó, nhưng không trùng với sách khác
     public boolean checkTrungTenSachKhacMa(String tenSach, String maSach) {
         String sql = "SELECT 1 FROM sach WHERE TenSach = ? AND MaSach <> ? LIMIT 1";
         try (Connection con = DBConnection.getConnection();

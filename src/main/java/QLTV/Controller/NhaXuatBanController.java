@@ -72,10 +72,16 @@ public class NhaXuatBanController {
         if (key.isEmpty()) { loadTable(); return; }
         fillTable(dao.search(key));
     }
-
+    
     private void handleInsert() {
         String ma = view.getMaNXB();
         if (ma.isEmpty()) ma = dao.taoMaNXBMoi();
+        
+        String TenNXB = view.getTenNXB();
+        if (!TenNXB.isEmpty() && dao.checkTrungTenNXB(TenNXB)) {
+            JOptionPane.showMessageDialog(view, "Tên nhà xuất bản đã tồn tại!");
+            return;
+        }
 
         NhaXuatBan nxb = readForm(ma);
         if (nxb == null) return;
@@ -172,10 +178,15 @@ public class NhaXuatBanController {
 
         try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
             String line;
+            boolean firstLine = true;
             int count = 0;
             DefaultTableModel m = view.getModel();
 
             while ((line = br.readLine()) != null) {
+                if (firstLine){
+                firstLine = false;
+                continue;
+            }
                 if (line.trim().isEmpty()) continue;
 
                 String[] p = line.split(",", -1);

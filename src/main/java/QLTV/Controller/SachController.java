@@ -58,7 +58,6 @@ public class SachController {
         } catch (Exception ignored) {}
     }
 
-    // ====== INIT COMBO ======
     private void initTacGiaCombo() {
         view.getCboTacGia().removeAllItems();
         List<String> list = dao.findAllMaTG();
@@ -111,7 +110,6 @@ public class SachController {
         String ma = view.getMaSach();
         if (ma.isEmpty()) ma = dao.taoMaSachMoi();
 
-        // ===== CHECK TRÙNG TÊN SÁCH =====
         String tenSach = view.getTenSach();
         if (!tenSach.isEmpty() && dao.checkTrungTenSach(tenSach)) {
             JOptionPane.showMessageDialog(view, "Tên sách đã tồn tại!");
@@ -263,9 +261,14 @@ public class SachController {
 
         try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
             String line;
+            boolean firstLine = true;
             int count = 0;
 
             while ((line = br.readLine()) != null) {
+                if (firstLine){
+                firstLine = false;
+                continue;
+            }
                 if (line.trim().isEmpty()) continue;
 
                 String[] p = line.split(",", -1);
