@@ -72,10 +72,16 @@ public class NhaXuatBanController {
         if (key.isEmpty()) { loadTable(); return; }
         fillTable(dao.search(key));
     }
-
+    
     private void handleInsert() {
         String ma = view.getMaNXB();
         if (ma.isEmpty()) ma = dao.taoMaNXBMoi();
+        
+        String TenNXB = view.getTenNXB();
+        if (!TenNXB.isEmpty() && dao.checkTrungTenNXB(TenNXB)) {
+            JOptionPane.showMessageDialog(view, "Tên nhà xuất bản đã tồn tại!");
+            return;
+        }
 
         NhaXuatBan nxb = readForm(ma);
         if (nxb == null) return;

@@ -58,7 +58,6 @@ public class SachController {
         } catch (Exception ignored) {}
     }
 
-    // ====== INIT COMBO ======
     private void initTacGiaCombo() {
         view.getCboTacGia().removeAllItems();
         List<String> list = dao.findAllMaTG();
@@ -111,7 +110,6 @@ public class SachController {
         String ma = view.getMaSach();
         if (ma.isEmpty()) ma = dao.taoMaSachMoi();
 
-        // ===== CHECK TRÙNG TÊN SÁCH =====
         String tenSach = view.getTenSach();
         if (!tenSach.isEmpty() && dao.checkTrungTenSach(tenSach)) {
             JOptionPane.showMessageDialog(view, "Tên sách đã tồn tại!");
